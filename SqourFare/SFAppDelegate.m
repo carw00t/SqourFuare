@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 whyte.tanner. All rights reserved.
 //
 
+#import <Parse/Parse.h>
 #import "SFAppDelegate.h"
 #import "SFLoginViewController.h"
 #import "SFHomeViewController.h"
@@ -14,16 +15,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+  // Override point for customization after application launch.
+  [Parse setApplicationId:@"gDjZDeZnAsjPXb8OGB3HhDJyjt7UtprEXeHmVpWU"
+                clientKey:@"fntzx9OFJiK7h4kysE4MvMIoDLbyabHujjOjM0xQ"];
+  self.window.backgroundColor = [UIColor whiteColor];
   SFHomeViewController *homeViewController = [[SFHomeViewController alloc] init];
   UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
   [navController setNavigationBarHidden:YES animated:NO];
   self.window.rootViewController = navController;
   [navController pushViewController:[[SFLoginViewController alloc] init] animated:NO];
-    [self.window makeKeyAndVisible];
-    return YES;
+  [self.window makeKeyAndVisible];
+  return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

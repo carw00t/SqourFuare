@@ -53,7 +53,7 @@
 }
 
 - (IBAction)loginButton:(id)sender {
-    NSLog(@"User %@ logged in with password %@", self.usernameTextField.text, self.passwordTextField.text);
+  NSLog(@"User %@ logged in with password %@", self.usernameTextField.text, self.passwordTextField.text);
   SFHomeViewController *homeViewController = [[SFHomeViewController alloc] init];
   
 }
