@@ -13,5 +13,5 @@
 @end
 
 @interface SFHomeViewController : UIViewController <LoginDelegate>
-
+@property (nonatomic, strong) NSString *username;
 @end

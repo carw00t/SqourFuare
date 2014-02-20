@@ -9,7 +9,7 @@
 #import "SFHomeViewController.h"
 
 @interface SFHomeViewController ()
-
+- (NSDictionary *)getEvents;
 @end
 
 @implementation SFHomeViewController
@@ -24,7 +24,19 @@
 
 - (void)userLoggedInWithUsername:(NSString *) username password: (NSString *) password
 {
-  
+  [self.navigationController popToRootViewControllerAnimated:YES];
+  [self.navigationController setNavigationBarHidden:NO animated:NO];
+  NSLog(@"User %@ logged in with password %@", username, password);
+  self.username = username;
+}
+/**
+ * Returns an dictionary of arrays. The inner arrays are arrays of events you've been
+ * invited to, events you're going to, and events you've been to.
+ */
+- (NSDictionary *)getEvents
+{
+  //TODO
+  return nil;
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

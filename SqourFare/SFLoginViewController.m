@@ -7,7 +7,6 @@
 //
 
 #import "SFLoginViewController.h"
-#import "SFHomeViewController.h"
 
 @interface SFLoginViewController ()
 @property (strong, nonatomic) IBOutlet UITextField *usernameTextField;
@@ -53,8 +52,7 @@
 }
 
 - (IBAction)loginButton:(id)sender {
-    NSLog(@"User %@ logged in with password %@", self.usernameTextField.text, self.passwordTextField.text);
-  SFHomeViewController *homeViewController = [[SFHomeViewController alloc] init];
+  [self.loginDelegate userLoggedInWithUsername:self.usernameTextField.text password:self.passwordTextField.text];
   
 }
 @end

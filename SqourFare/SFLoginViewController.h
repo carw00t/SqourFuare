@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SFHomeViewController.h"
 
 @interface SFLoginViewController : UIViewController
-
+@property (strong, nonatomic) id<LoginDelegate> loginDelegate;
 @end
