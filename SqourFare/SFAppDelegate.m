@@ -7,6 +7,8 @@
 //
 
 #import "SFAppDelegate.h"
+#import "SFLoginViewController.h"
+#import "SFHomeViewController.h"
 
 @implementation SFAppDelegate
 
@@ -15,6 +17,11 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
+  SFHomeViewController *homeViewController = [[SFHomeViewController alloc] init];
+  UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];
+  [navController setNavigationBarHidden:YES animated:NO];
+  self.window.rootViewController = navController;
+  [navController pushViewController:[[SFLoginViewController alloc] init] animated:NO];
     [self.window makeKeyAndVisible];
     return YES;
 }
