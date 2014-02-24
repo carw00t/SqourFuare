@@ -7,40 +7,31 @@
 //
 
 #import "SFDataSource.h"
+#import "SFUser.h"
 
 NSString * const SFGoingEvents = @"Going Events";
 NSString * const SFInvitedEvents = @"Invited Events";
 NSString * const SFWentEvents = @"Went Events";
 
+@interface SFDataSource ()
+@property (strong, nonatomic) NSMutableArray *users;
+@end
+
 @implementation SFDataSource
 
--(void)reloadData
+- (instancetype) init
 {
-  self.allEvents = [self getEvents];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  SFHomeViewTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"HomeCell"];
-  if (!cell) {
-    cell = [[SFHomeViewTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HomeCell"];
+  self = [super init];
+  if (self) {
+    self.users = [NSMutableArray alloc];
+    SFUser *user1 = [[SFUser alloc] init];
+    user1.name = @"Dorufin";
+    SFUser *user2 = [[SFUser alloc] init];
+    user2.name = @"Whalu";
+    [self.users addObject:user1];
+    [self.users addObject:user2];
   }
-  NSMutableArray *events = [self getEventsForTableGroup: indexPath.section];
-  SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
-  
-  // Get the dates to display
-  NSDateComponents *currComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:[NSDate date]];
-  NSInteger currDay = [currComponents day];
-  
-  NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute fromDate:event.date];
-  NSInteger eventDay = [components day];
-  NSInteger eventHour = [components hour];
-  NSInteger eventMinute = [components minute];
-  
-  cell.restaurantNameLabel.text = event.name;
-  cell.dayLabel.text = [NSString stringWithFormat:@"+%d", (eventDay - currDay)];
-  cell.timeLabel.text = [NSString stringWithFormat:@"%d:%d", eventHour, eventMinute];
-  return cell;
+  return self;
 }
 
 - (NSMutableDictionary *)getEvents
@@ -56,7 +47,7 @@ NSString * const SFWentEvents = @"Went Events";
 
 - (NSMutableArray *)getEventsForTableGroup:(NSInteger) groupNum
 {
-  return [self.allEvents objectForKey:[self getKeyForSection:groupNum]];
+  return [[self getEvents] objectForKey:[self getKeyForSection:groupNum]];
 }
 
 - (NSString *)getKeyForSection: (NSInteger) section
@@ -79,20 +70,9 @@ NSString * const SFWentEvents = @"Went Events";
   return eventsKey;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSMutableArray *)getUsers
 {
-  return [[self getEventsForTableGroup:section] count];
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-  [self reloadData];
-  return [self.allEvents count];
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-  return [self getKeyForSection:section];
+  return self.users;
 }
 
 @end

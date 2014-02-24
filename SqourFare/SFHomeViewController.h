@@ -14,7 +14,7 @@
 
 @protocol LoginDelegate <NSObject>
 - (void)userLoggedInWithUsername:(NSString *) username password: (NSString *) password;
-- (id)initWithDataSource: (SFDataSource<UITableViewDataSource> *) dataSource;
+- (id)initWithDataSource: (SFDataSource*) dataSource;
 @end
 
 @interface SFHomeViewController : UIViewController <LoginDelegate>

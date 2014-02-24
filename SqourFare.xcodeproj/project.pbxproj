@@ -44,6 +44,7 @@
 		8EBA6F5618BB053B001A5639 /* SFNewEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5418BB053B001A5639 /* SFNewEventViewController.m */; };
 		8EBA6F5718BB053B001A5639 /* SFNewEventViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */; };
 		8EBA6F5A18BB0827001A5639 /* SFDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5918BB0827001A5639 /* SFDataSource.m */; };
+		8EBA6F6018BB1ACD001A5639 /* SFUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5F18BB1ACD001A5639 /* SFUser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -104,6 +105,8 @@
 		8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFNewEventViewController.xib; sourceTree = "<group>"; };
 		8EBA6F5818BB0827001A5639 /* SFDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDataSource.h; sourceTree = "<group>"; };
 		8EBA6F5918BB0827001A5639 /* SFDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDataSource.m; sourceTree = "<group>"; };
+		8EBA6F5E18BB1ACD001A5639 /* SFUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFUser.h; sourceTree = "<group>"; };
+		8EBA6F5F18BB1ACD001A5639 /* SFUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUser.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,6 +210,8 @@
 				8EBA6F5418BB053B001A5639 /* SFNewEventViewController.m */,
 				8EBA6F5818BB0827001A5639 /* SFDataSource.h */,
 				8EBA6F5918BB0827001A5639 /* SFDataSource.m */,
+				8EBA6F5E18BB1ACD001A5639 /* SFUser.h */,
+				8EBA6F5F18BB1ACD001A5639 /* SFUser.m */,
 				8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */,
 			);
 			path = SqourFare;
@@ -353,6 +358,7 @@
 				8E2E89C418B59D210078DB5B /* SFHomeViewController.m in Sources */,
 				8EBA6F5A18BB0827001A5639 /* SFDataSource.m in Sources */,
 				8E2E89C818B5ABE40078DB5B /* SFEvent.m in Sources */,
+				8EBA6F6018BB1ACD001A5639 /* SFUser.m in Sources */,
 				8E2E894718B559490078DB5B /* SFAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -14,8 +14,10 @@ extern NSString * const SFGoingEvents;
 extern NSString * const SFInvitedEvents;
 extern NSString * const SFWentEvents;
 
-@interface SFDataSource : NSObject <UITableViewDataSource>
-- (void) reloadData;
+@interface SFDataSource : NSObject
 - (NSMutableDictionary *)getEvents;
+- (NSMutableArray *)getUsers;
+- (NSMutableArray *)getEventsForTableGroup:(NSInteger) groupNum;
+- (NSString *)getKeyForSection: (NSInteger) section;
 @property (nonatomic, strong) NSMutableDictionary *allEvents;
 @end

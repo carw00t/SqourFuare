@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SFDataSource.h"
+#import "SFUser.h"
 
 @interface SFNewEventViewController : UITableViewController
-
+@property (nonatomic, strong) SFDataSource *dataSource;
 @end

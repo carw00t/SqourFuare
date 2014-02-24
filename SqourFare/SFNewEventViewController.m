@@ -23,6 +23,14 @@
     return self;
 }
 
+- (id)initWithStyle:(UITableViewStyle)style dataSource:(SFDataSource*) dataSource
+{
+  self = [super initWithStyle:style];
+  if (self) {
+    // Custom initialization
+  }
+  return self;
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -45,14 +53,14 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  // 1st section is recommended friends, 2nd is the rest
-  return 2;
+  // TODO later: 1st section is recommended friends, 2nd is the rest
+  return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
-    return 0;
+  NSInteger users = [[self.dataSource getUsers] count];
+  return users;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -62,9 +70,9 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    
-    // Configure the cell...
-    
+
+  SFUser *user = [[self.dataSource getUsers] objectAtIndex:indexPath.row];
+  cell.textLabel.text = user.name;
     return cell;
 }
 

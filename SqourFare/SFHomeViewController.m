@@ -8,12 +8,12 @@
 
 #import "SFHomeViewController.h"
 
-@interface SFHomeViewController() <UITableViewDelegate>
-@property (strong, nonatomic) SFDataSource<UITableViewDataSource> *dataSource;
+@interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
+@property (strong, nonatomic) SFDataSource *dataSource;
 @end
 
 @implementation SFHomeViewController
-- (id)initWithDataSource: (SFDataSource<UITableViewDataSource> *) dataSource
+- (id)initWithDataSource: (SFDataSource*) dataSource
 {
   if (self = [super initWithNibName:@"SFHomeViewController" bundle:nil]) {
     self.dataSource = dataSource;
@@ -54,7 +54,7 @@
   
   self.title = @"All Events";
   self.homeTableView.delegate = self;
-  self.homeTableView.dataSource = self.dataSource;
+  self.homeTableView.dataSource = self;
   
   UIBarButtonItem *newReminderButton = [[UIBarButtonItem alloc] initWithTitle:@"New Meal" style:UIBarButtonItemStylePlain target:self action:@selector(newMeal:)];
   self.navigationItem.rightBarButtonItem = newReminderButton;
@@ -79,5 +79,47 @@
 {
   return 44.0;
 }
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  SFHomeViewTableCell *cell = [tableView dequeueReusableCellWithIdentifier:@"HomeCell"];
+  if (!cell) {
+    cell = [[SFHomeViewTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HomeCell"];
+  }
+  NSMutableArray *events = [self.dataSource getEventsForTableGroup: indexPath.section];
+  SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
+  
+  // Get the dates to display
+  NSDateComponents *currComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:[NSDate date]];
+  NSInteger currDay = [currComponents day];
+  
+  NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute fromDate:event.date];
+  NSInteger eventDay = [components day];
+  NSInteger eventHour = [components hour];
+  NSInteger eventMinute = [components minute];
+  
+  cell.restaurantNameLabel.text = event.name;
+  cell.dayLabel.text = [NSString stringWithFormat:@"+%d", (eventDay - currDay)];
+  cell.timeLabel.text = [NSString stringWithFormat:@"%d:%d", eventHour, eventMinute];
+  return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+  return [[self.dataSource getEventsForTableGroup:section] count];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+
+  return [[self.dataSource getEvents] count];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+  return [self.dataSource getKeyForSection:section];
+}
+
+
 
 @end
