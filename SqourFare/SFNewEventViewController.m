@@ -9,7 +9,7 @@
 #import "SFNewEventViewController.h"
 
 @interface SFNewEventViewController ()
-
+@property (nonatomic, strong) NSArray *users;
 @end
 
 @implementation SFNewEventViewController
@@ -27,13 +27,17 @@
 {
   self = [super initWithStyle:style];
   if (self) {
-    // Custom initialization
+    self.dataSource = dataSource;
   }
   return self;
 }
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+  UIBarButtonItem *newReminderButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(inviteFriends:)];
+  self.navigationItem.rightBarButtonItem = newReminderButton;
 
   self.title = @"Who's invited?";
     // Uncomment the following line to preserve selection between presentations.
@@ -41,6 +45,16 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+}
+
+-(void)inviteFriends:(id)sender
+{
+  NSArray *indexPaths = [self.tableView indexPathsForSelectedRows];
+  NSLog(@"Time to invite...");
+  for (NSIndexPath *indexPath in indexPaths) {
+    NSLog(@"%@", [[self.users objectAtIndex:indexPath.row] name]);
+  }
+  [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning
@@ -59,7 +73,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  NSInteger users = [[self.dataSource getUsers] count];
+  self.users = [self.dataSource getUsers];
+  NSInteger users = [self.users count];
   return users;
 }
 

@@ -14,7 +14,7 @@ NSString * const SFInvitedEvents = @"Invited Events";
 NSString * const SFWentEvents = @"Went Events";
 
 @interface SFDataSource ()
-@property (strong, nonatomic) NSMutableArray *users;
+
 @end
 
 @implementation SFDataSource
@@ -72,7 +72,14 @@ NSString * const SFWentEvents = @"Went Events";
 
 - (NSMutableArray *)getUsers
 {
-  return self.users;
+  NSMutableArray *users = [[NSMutableArray alloc] init];
+  SFUser *user1 = [[SFUser alloc] init];
+  user1.name = @"Dorufin";
+  SFUser *user2 = [[SFUser alloc] init];
+  user2.name = @"Whalu";
+  [users addObject:user1];
+  [users addObject:user2];
+  return users;
 }
 
 @end
