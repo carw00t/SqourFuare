@@ -11,4 +11,6 @@
 @interface SFEvent : NSObject
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSDate *date;
+
+-(instancetype) initWithName: (NSString*)name date:(NSDate*)date;
 @end

@@ -13,5 +13,6 @@
 @end
 
 @interface SFHomeViewController : UIViewController <LoginDelegate>
+@property (strong, nonatomic) IBOutlet UITableView *homeTableView;
 @property (nonatomic, strong) NSString *username;
 @end

@@ -15,10 +15,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
-  
+  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+  // Override point for customization after application launch.
+  [Parse setApplicationId:@"gDjZDeZnAsjPXb8OGB3HhDJyjt7UtprEXeHmVpWU"
+                clientKey:@"fntzx9OFJiK7h4kysE4MvMIoDLbyabHujjOjM0xQ"];
+  self.window.backgroundColor = [UIColor whiteColor];
   SFHomeViewController *homeViewController = [[SFHomeViewController alloc] init];
   SFLoginViewController *loginViewController = [[SFLoginViewController alloc] init];
   loginViewController.loginDelegate = homeViewController;

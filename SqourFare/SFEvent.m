@@ -9,5 +9,17 @@
 #import "SFEvent.h"
 
 @implementation SFEvent
+-(instancetype) initWithName: (NSString*)name date:(NSDate*)date
+{
+  if (self = [super init]) {
+    self.name = name;
+    self.date = date;
+  }
+  return self;
+}
 
+- (NSString *)description
+{
+  return [NSString stringWithFormat:@"Event | name : %@ date %@", self.name, self.date];
+}
 @end
