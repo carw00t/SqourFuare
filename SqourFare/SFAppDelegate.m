@@ -8,8 +8,6 @@
 
 #import <Parse/Parse.h>
 #import "SFAppDelegate.h"
-#import "SFLoginViewController.h"
-#import "SFHomeViewController.h"
 
 @implementation SFAppDelegate
 
@@ -20,7 +18,9 @@
   [Parse setApplicationId:@"gDjZDeZnAsjPXb8OGB3HhDJyjt7UtprEXeHmVpWU"
                 clientKey:@"fntzx9OFJiK7h4kysE4MvMIoDLbyabHujjOjM0xQ"];
   self.window.backgroundColor = [UIColor whiteColor];
-  SFHomeViewController *homeViewController = [[SFHomeViewController alloc] init];
+  
+  SFDataSource *dataSource = [[SFDataSource alloc] init];
+  SFHomeViewController *homeViewController = [[SFHomeViewController alloc] initWithDataSource:dataSource];
   SFLoginViewController *loginViewController = [[SFLoginViewController alloc] init];
   loginViewController.loginDelegate = homeViewController;
   UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];

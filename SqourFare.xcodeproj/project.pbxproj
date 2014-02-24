@@ -41,6 +41,9 @@
 		8EBA6F4D18BAB7E1001A5639 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494D218B5A94E0086D393 /* Parse.framework */; };
 		8EBA6F4F18BAE3AB001A5639 /* SFHomeViewTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA6F4E18BAE3AB001A5639 /* SFHomeViewTableCell.xib */; };
 		8EBA6F5218BAE999001A5639 /* SFHomeViewTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5118BAE999001A5639 /* SFHomeViewTableCell.m */; };
+		8EBA6F5618BB053B001A5639 /* SFNewEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5418BB053B001A5639 /* SFNewEventViewController.m */; };
+		8EBA6F5718BB053B001A5639 /* SFNewEventViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */; };
+		8EBA6F5A18BB0827001A5639 /* SFDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5918BB0827001A5639 /* SFDataSource.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +99,11 @@
 		8EBA6F4E18BAE3AB001A5639 /* SFHomeViewTableCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFHomeViewTableCell.xib; sourceTree = "<group>"; };
 		8EBA6F5018BAE999001A5639 /* SFHomeViewTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFHomeViewTableCell.h; sourceTree = "<group>"; };
 		8EBA6F5118BAE999001A5639 /* SFHomeViewTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFHomeViewTableCell.m; sourceTree = "<group>"; };
+		8EBA6F5318BB053B001A5639 /* SFNewEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFNewEventViewController.h; sourceTree = "<group>"; };
+		8EBA6F5418BB053B001A5639 /* SFNewEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFNewEventViewController.m; sourceTree = "<group>"; };
+		8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFNewEventViewController.xib; sourceTree = "<group>"; };
+		8EBA6F5818BB0827001A5639 /* SFDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDataSource.h; sourceTree = "<group>"; };
+		8EBA6F5918BB0827001A5639 /* SFDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDataSource.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +203,11 @@
 				8E2E894618B559490078DB5B /* SFAppDelegate.m */,
 				8E2E894818B559490078DB5B /* Images.xcassets */,
 				8E2E893D18B559490078DB5B /* Supporting Files */,
+				8EBA6F5318BB053B001A5639 /* SFNewEventViewController.h */,
+				8EBA6F5418BB053B001A5639 /* SFNewEventViewController.m */,
+				8EBA6F5818BB0827001A5639 /* SFDataSource.h */,
+				8EBA6F5918BB0827001A5639 /* SFDataSource.m */,
+				8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */,
 			);
 			path = SqourFare;
 			sourceTree = "<group>";
@@ -308,6 +321,7 @@
 				8E2E897018B5608F0078DB5B /* MealInviteView.xib in Resources */,
 				8E2E894118B559490078DB5B /* InfoPlist.strings in Resources */,
 				8E2E89BB18B5996D0078DB5B /* SFLoginViewController.xib in Resources */,
+				8EBA6F5718BB053B001A5639 /* SFNewEventViewController.xib in Resources */,
 				8E2E894918B559490078DB5B /* Images.xcassets in Resources */,
 				8EBA6F4F18BAE3AB001A5639 /* SFHomeViewTableCell.xib in Resources */,
 				8E2E896E18B55CCB0078DB5B /* MealPlanView.xib in Resources */,
@@ -332,10 +346,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8EBA6F5618BB053B001A5639 /* SFNewEventViewController.m in Sources */,
 				8E2E89BA18B5996D0078DB5B /* SFLoginViewController.m in Sources */,
 				8EBA6F5218BAE999001A5639 /* SFHomeViewTableCell.m in Sources */,
 				8E2E894318B559490078DB5B /* main.m in Sources */,
 				8E2E89C418B59D210078DB5B /* SFHomeViewController.m in Sources */,
+				8EBA6F5A18BB0827001A5639 /* SFDataSource.m in Sources */,
 				8E2E89C818B5ABE40078DB5B /* SFEvent.m in Sources */,
 				8E2E894718B559490078DB5B /* SFAppDelegate.m in Sources */,
 			);

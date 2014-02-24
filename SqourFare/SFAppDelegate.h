@@ -6,7 +6,10 @@
 //  Copyright (c) 2014 whyte.tanner. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import <Parse/Parse.h>
+#import "SFLoginViewController.h"
+#import "SFHomeViewController.h"
+#import "SFDataSource.h"
 
 @interface SFAppDelegate : UIResponder <UIApplicationDelegate>
 

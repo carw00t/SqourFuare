@@ -7,9 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SFDataSource.h"
+#import "SFEvent.h"
+#import "SFHomeViewTableCell.h"
+#import "SFNewEventViewController.h"
 
 @protocol LoginDelegate <NSObject>
 - (void)userLoggedInWithUsername:(NSString *) username password: (NSString *) password;
+- (id)initWithDataSource: (SFDataSource<UITableViewDataSource> *) dataSource;
 @end
 
 @interface SFHomeViewController : UIViewController <LoginDelegate>
