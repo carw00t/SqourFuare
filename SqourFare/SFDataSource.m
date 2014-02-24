@@ -68,9 +68,9 @@ NSString * const SFWentEvents = @"Went Events";
 {
   NSMutableArray *users = [[NSMutableArray alloc] init];
   SFUser *user1 = [[SFUser alloc] init];
-  user1.name = @"Dorufin";
+  user1.username = @"Dorufin";
   SFUser *user2 = [[SFUser alloc] init];
-  user2.name = @"Whalu";
+  user2.username = @"Whalu";
   [users addObject:user1];
   [users addObject:user2];
   return users;

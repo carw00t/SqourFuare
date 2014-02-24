@@ -52,7 +52,7 @@
   NSArray *indexPaths = [self.tableView indexPathsForSelectedRows];
   NSLog(@"Time to invite...");
   for (NSIndexPath *indexPath in indexPaths) {
-    NSLog(@"%@", [[self.users objectAtIndex:indexPath.row] name]);
+    NSLog(@"%@", [[self.users objectAtIndex:indexPath.row] username]);
   }
   [self.navigationController popViewControllerAnimated:YES];
 }
@@ -86,8 +86,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 
-  SFUser *user = [self.users objectAtIndex:indexPath.row];
-  cell.textLabel.text = user.name;
+    SFUser *user = [self.users objectAtIndex:indexPath.row];
+    cell.textLabel.text = user.username;
+  
     return cell;
 }
 

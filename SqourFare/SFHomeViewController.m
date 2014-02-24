@@ -21,12 +21,13 @@
   return self;
 }
 
-- (void)userLoggedInWithUsername:(NSString *) username password: (NSString *) password
+- (void) userLoggedIn:(SFUser *)user
 {
   [self.navigationController popToRootViewControllerAnimated:YES];
   [self.navigationController setNavigationBarHidden:NO animated:NO];
-  NSLog(@"User %@ logged in with password %@", username, password);
-  self.username = username;
+  NSLog(@"User %@ logged in", user.username);
+  
+  // TODO(jacob) deprecate this
   NSMutableDictionary *allEvents = [self.dataSource getEvents];
   NSArray *goingEvents = [allEvents objectForKey:SFInvitedEvents];
   NSLog(@"%@", goingEvents);
@@ -98,8 +99,8 @@
   NSInteger eventMinute = [components minute];
   
   cell.restaurantNameLabel.text = event.name;
-  cell.dayLabel.text = [NSString stringWithFormat:@"+%d", (eventDay - currDay)];
-  cell.timeLabel.text = [NSString stringWithFormat:@"%d:%d", eventHour, eventMinute];
+  cell.dayLabel.text = [NSString stringWithFormat:@"+%ld", (eventDay - currDay)];
+  cell.timeLabel.text = [NSString stringWithFormat:@"%d:%d", (int)eventHour, (int)eventMinute];
   return cell;
 }
 
