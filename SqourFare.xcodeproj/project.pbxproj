@@ -28,7 +28,6 @@
 		8E2E895218B559490078DB5B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E893A18B559490078DB5B /* UIKit.framework */; };
 		8E2E895A18B559490078DB5B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E895818B559490078DB5B /* InfoPlist.strings */; };
 		8E2E895C18B559490078DB5B /* SqourFareTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2E895B18B559490078DB5B /* SqourFareTests.m */; };
-		8E2E896818B559A70078DB5B /* LoginView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E896718B559A70078DB5B /* LoginView.xib */; };
 		8E2E896A18B55A990078DB5B /* RestaurantPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E896918B55A990078DB5B /* RestaurantPickerView.xib */; };
 		8E2E896E18B55CCB0078DB5B /* MealPlanView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E896D18B55CCB0078DB5B /* MealPlanView.xib */; };
 		8E2E897018B5608F0078DB5B /* MealInviteView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E896F18B5608F0078DB5B /* MealInviteView.xib */; };
@@ -45,6 +44,8 @@
 		8EBA6F5718BB053B001A5639 /* SFNewEventViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */; };
 		8EBA6F5A18BB0827001A5639 /* SFDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5918BB0827001A5639 /* SFDataSource.m */; };
 		8EBA6F6018BB1ACD001A5639 /* SFUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5F18BB1ACD001A5639 /* SFUser.m */; };
+		8EBA6F6418BB2C4A001A5639 /* SFMealInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F6218BB2C4A001A5639 /* SFMealInviteViewController.m */; };
+		8EBA6F6518BB2C4B001A5639 /* SFMealInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA6F6318BB2C4A001A5639 /* SFMealInviteViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,7 +85,6 @@
 		8E2E895718B559490078DB5B /* SqourFareTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SqourFareTests-Info.plist"; sourceTree = "<group>"; };
 		8E2E895918B559490078DB5B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8E2E895B18B559490078DB5B /* SqourFareTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SqourFareTests.m; sourceTree = "<group>"; };
-		8E2E896718B559A70078DB5B /* LoginView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LoginView.xib; path = ../LoginView.xib; sourceTree = "<group>"; };
 		8E2E896918B55A990078DB5B /* RestaurantPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RestaurantPickerView.xib; sourceTree = "<group>"; };
 		8E2E896D18B55CCB0078DB5B /* MealPlanView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MealPlanView.xib; path = ../MealPlanView.xib; sourceTree = "<group>"; };
 		8E2E896F18B5608F0078DB5B /* MealInviteView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MealInviteView.xib; sourceTree = "<group>"; };
@@ -107,6 +107,9 @@
 		8EBA6F5918BB0827001A5639 /* SFDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDataSource.m; sourceTree = "<group>"; };
 		8EBA6F5E18BB1ACD001A5639 /* SFUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFUser.h; sourceTree = "<group>"; };
 		8EBA6F5F18BB1ACD001A5639 /* SFUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUser.m; sourceTree = "<group>"; };
+		8EBA6F6118BB2C4A001A5639 /* SFMealInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFMealInviteViewController.h; sourceTree = "<group>"; };
+		8EBA6F6218BB2C4A001A5639 /* SFMealInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMealInviteViewController.m; sourceTree = "<group>"; };
+		8EBA6F6318BB2C4A001A5639 /* SFMealInviteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFMealInviteViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,7 +202,9 @@
 				8E2E89B918B5996D0078DB5B /* SFLoginViewController.xib */,
 				8E2E896D18B55CCB0078DB5B /* MealPlanView.xib */,
 				8E2E896F18B5608F0078DB5B /* MealInviteView.xib */,
-				8E2E896718B559A70078DB5B /* LoginView.xib */,
+				8EBA6F6118BB2C4A001A5639 /* SFMealInviteViewController.h */,
+				8EBA6F6218BB2C4A001A5639 /* SFMealInviteViewController.m */,
+				8EBA6F6318BB2C4A001A5639 /* SFMealInviteViewController.xib */,
 				8E2E896918B55A990078DB5B /* RestaurantPickerView.xib */,
 				8E2E897118B571120078DB5B /* InviteView.xib */,
 				8E2E894518B559490078DB5B /* SFAppDelegate.h */,
@@ -327,11 +332,11 @@
 				8E2E894118B559490078DB5B /* InfoPlist.strings in Resources */,
 				8E2E89BB18B5996D0078DB5B /* SFLoginViewController.xib in Resources */,
 				8EBA6F5718BB053B001A5639 /* SFNewEventViewController.xib in Resources */,
+				8EBA6F6518BB2C4B001A5639 /* SFMealInviteViewController.xib in Resources */,
 				8E2E894918B559490078DB5B /* Images.xcassets in Resources */,
 				8EBA6F4F18BAE3AB001A5639 /* SFHomeViewTableCell.xib in Resources */,
 				8E2E896E18B55CCB0078DB5B /* MealPlanView.xib in Resources */,
 				8E2E89C518B59D210078DB5B /* SFHomeViewController.xib in Resources */,
-				8E2E896818B559A70078DB5B /* LoginView.xib in Resources */,
 				8E2E896A18B55A990078DB5B /* RestaurantPickerView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,6 +363,7 @@
 				8E2E89C418B59D210078DB5B /* SFHomeViewController.m in Sources */,
 				8EBA6F5A18BB0827001A5639 /* SFDataSource.m in Sources */,
 				8E2E89C818B5ABE40078DB5B /* SFEvent.m in Sources */,
+				8EBA6F6418BB2C4A001A5639 /* SFMealInviteViewController.m in Sources */,
 				8EBA6F6018BB1ACD001A5639 /* SFUser.m in Sources */,
 				8E2E894718B559490078DB5B /* SFAppDelegate.m in Sources */,
 			);

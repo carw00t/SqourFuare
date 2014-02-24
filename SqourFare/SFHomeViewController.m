@@ -119,6 +119,10 @@
   return [self.dataSource getKeyForSection:section];
 }
 
-
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  NSArray *events = [self.dataSource getEventsForTableGroup:indexPath.section];
+  NSLog(@"Selected event: %@", [[events objectAtIndex:indexPath.row] name]);
+}
 
 @end
