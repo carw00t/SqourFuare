@@ -64,9 +64,8 @@
 
 -(void)newMeal:(id)sender
 {
-  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithStyle:UITableViewStylePlain];
+  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithStyle:UITableViewStylePlain dataSource:self.dataSource];
   [self.navigationController pushViewController:viewController animated:YES];
-  //TRReminderTableViewController *tableView = [[TRReminderTableViewController alloc] initWithStyle:UITableViewStylePlain];
 }
 
 - (void)didReceiveMemoryWarning

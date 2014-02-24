@@ -12,4 +12,5 @@
 
 @interface SFNewEventViewController : UITableViewController
 @property (nonatomic, strong) SFDataSource *dataSource;
+- (id)initWithStyle:(UITableViewStyle)style dataSource:(SFDataSource*) dataSource;
 @end
