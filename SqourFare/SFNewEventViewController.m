@@ -72,7 +72,7 @@
     }
 
   SFUser *user = [[self.dataSource getUsers] objectAtIndex:indexPath.row];
-  cell.textLabel.text = user.name;
+  cell.textLabel.text = user.username;
     return cell;
 }
 

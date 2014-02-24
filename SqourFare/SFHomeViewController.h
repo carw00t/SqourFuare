@@ -13,11 +13,11 @@
 #import "SFNewEventViewController.h"
 
 @protocol LoginDelegate <NSObject>
-- (void)userLoggedInWithUsername:(NSString *) username password: (NSString *) password;
+- (void)userLoggedIn:(SFUser *)user;
 - (id)initWithDataSource: (SFDataSource*) dataSource;
 @end
 
 @interface SFHomeViewController : UIViewController <LoginDelegate>
 @property (strong, nonatomic) IBOutlet UITableView *homeTableView;
-@property (nonatomic, strong) NSString *username;
+@property (strong, nonatomic) SFUser *loggedInUser;
 @end

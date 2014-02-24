@@ -23,11 +23,11 @@ NSString * const SFWentEvents = @"Went Events";
 {
   self = [super init];
   if (self) {
-    self.users = [NSMutableArray alloc];
+    self.users = [NSMutableArray array];
     SFUser *user1 = [[SFUser alloc] init];
-    user1.name = @"Dorufin";
+    user1.username = @"Dorufin";
     SFUser *user2 = [[SFUser alloc] init];
-    user2.name = @"Whalu";
+    user2.username = @"Whalu";
     [self.users addObject:user1];
     [self.users addObject:user2];
   }
