@@ -15,8 +15,8 @@
 @property (nonatomic, strong) NSString *userID;
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSArray *friends;
-@property (nonatomic, strong) NSArray *invites;
-@property (nonatomic, strong) NSArray *confirmedEvents;
+@property (nonatomic, strong) NSArray *inviteIDs;
+@property (nonatomic, strong) NSArray *confirmedEventIDs;
 
 @property (nonatomic, strong) PFObject *parseObj;
 
@@ -35,8 +35,8 @@
     self.userID = userObj.objectId;
     self.username = userObj[@"username"];
     self.friends = userObj[@"friends"];
-    self.invites = userObj[@"invites"];
-    self.confirmedEvents = userObj[@"confirmedEvents"];
+    self.inviteIDs = userObj[@"invites"];
+    self.confirmedEventIDs = userObj[@"confirmedEvents"];
     self.parseObj = userObj;
   }
   
@@ -51,8 +51,8 @@
     self.userID = userID;
     self.username = username;
     self.friends = friends;
-    self.invites = invites;
-    self.confirmedEvents = events;
+    self.inviteIDs = invites;
+    self.confirmedEventIDs = events;
     
     self.parseObj = [PFObject objectWithClassName:@"User"];
     self.parseObj.objectId = userID;
@@ -148,12 +148,12 @@
 
 - (void) confirmEvent:(NSString *)eventID
 {
-  if ([self.invites containsObject:eventID] && ![self.confirmedEvents containsObject:eventID]) {
+  if ([self.inviteIDs containsObject:eventID] && ![self.confirmedEventIDs containsObject:eventID]) {
     
-    NSMutableArray *muteInvites = [NSMutableArray arrayWithArray:self.invites];
+    NSMutableArray *muteInvites = [NSMutableArray arrayWithArray:self.inviteIDs];
     [muteInvites removeObject:eventID];
-    self.invites = [NSArray arrayWithArray:muteInvites];
-    self.confirmedEvents = [self.confirmedEvents arrayByAddingObject:eventID];
+    self.inviteIDs = [NSArray arrayWithArray:muteInvites];
+    self.confirmedEventIDs = [self.confirmedEventIDs arrayByAddingObject:eventID];
     
     [self.parseObj removeObject:eventID forKey:@"invites"];
     [self.parseObj addObject:eventID forKey:@"confirmedEvents"];
@@ -163,8 +163,8 @@
 
 - (void) inviteToEvent:(NSString *)eventID
 {
-  if (![self.invites containsObject:eventID]) {
-    self.invites = [self.invites arrayByAddingObject:eventID];
+  if (![self.inviteIDs containsObject:eventID]) {
+    self.inviteIDs = [self.inviteIDs arrayByAddingObject:eventID];
     [self.parseObj addObject:eventID forKey:@"invites"];
     [self.parseObj saveInBackground];
   }
@@ -196,12 +196,12 @@
 
 - (void) unconfirmEvent:(NSString *)eventID
 {
-  if ([self.confirmedEvents containsObject:eventID] && ![self.invites containsObject:eventID]) {
+  if ([self.confirmedEventIDs containsObject:eventID] && ![self.inviteIDs containsObject:eventID]) {
     
-    NSMutableArray *muteConfirms = [NSMutableArray arrayWithArray:self.confirmedEvents];
+    NSMutableArray *muteConfirms = [NSMutableArray arrayWithArray:self.confirmedEventIDs];
     [muteConfirms removeObject:eventID];
-    self.confirmedEvents = [NSArray arrayWithArray:muteConfirms];
-    self.invites = [self.invites arrayByAddingObject:eventID];
+    self.confirmedEventIDs = [NSArray arrayWithArray:muteConfirms];
+    self.inviteIDs = [self.inviteIDs arrayByAddingObject:eventID];
     
     [self.parseObj removeObject:eventID forKey:@"confirmedEvents"];
     [self.parseObj addObject:eventID forKey:@"invites"];
@@ -211,16 +211,20 @@
 
 - (NSArray *) getEventsOfType:(SFEventType) type
 {
-  NSArray *events;
+  NSArray *eventIDs;
   switch (type) {
     case SFGoingEvent:
-      events = self.confirmedEvents;
+      eventIDs = self.confirmedEventIDs;
       break;
     case SFInvitedEvent:
-      events = self.invites;
+      eventIDs = self.inviteIDs;
       break;
     default:
       break;
+  }
+  NSMutableArray *events =  [NSMutableArray array];
+  for (NSString *eventID in eventIDs) {
+    [events addObject:[SFEvent eventWithID:eventID]];
   }
   return events;
 }

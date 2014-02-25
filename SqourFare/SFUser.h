@@ -26,12 +26,11 @@
 - (void) unconfirmEvent:(NSString *)eventID;
 - (NSArray *) getEventsOfType:(SFEventType) type;
 
-
 - (NSString *) userID;
 - (NSString *) username;
 - (NSArray *) friends;
-- (NSArray *) invites;
-- (NSArray *) confirmedEvents;
+- (NSArray *) inviteIDs;
+- (NSArray *) confirmedEventIDs;
 
 + (instancetype) signupUserWithUsername:(NSString *)username password:(NSString *)password;
 + (instancetype) userWithID:(NSString *)userID;

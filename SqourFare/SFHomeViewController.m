@@ -84,7 +84,7 @@
   NSDateComponents *currComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:[NSDate date]];
   NSInteger currDay = [currComponents day];
   
-  NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute fromDate:event.date];
+  NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute fromDate:[event date]];
   NSInteger eventDay = [components day];
   NSInteger eventHour = [components hour];
   NSInteger eventMinute = [components minute];
