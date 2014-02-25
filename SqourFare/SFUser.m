@@ -11,6 +11,13 @@
 
 @interface SFUser ()
 
+// invariant: these fields are always in sync with parse
+@property (nonatomic, strong) NSString *userID;
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSArray *friends;
+@property (nonatomic, strong) NSArray *invites;
+@property (nonatomic, strong) NSArray *confirmedEvents;
+
 @property (nonatomic, strong) PFObject *parseObj;
 
 @end
@@ -18,7 +25,7 @@
 @implementation SFUser
 
 // init with a parse db object for convenience
-- (id) initWithPFObject:(PFObject *)userObj
+- (instancetype) initWithPFObject:(PFObject *)userObj
 {
   if (userObj == nil) {
     return nil;
@@ -36,9 +43,9 @@
   return self;
 }
 
-- (id) initWithUserID:(NSString *)userID username:(NSString *)username
-              friends:(NSArray *)friends invites:(NSArray *)invites
-               events:(NSArray *)events
+- (instancetype) initWithUserID:(NSString *)userID username:(NSString *)username
+                        friends:(NSArray *)friends invites:(NSArray *)invites
+                         events:(NSArray *)events
 {
   if (self = [super init]) {
     self.userID = userID;
@@ -50,12 +57,72 @@
     self.parseObj = [PFObject objectWithClassName:@"User"];
     self.parseObj.objectId = userID;
     [self.parseObj setObject:username forKey:@"username"];
-    [self.parseObj setObject:[NSArray array] forKey:@"friends"];
-    [self.parseObj setObject:[NSArray array] forKey:@"invites"];
-    [self.parseObj setObject:[NSArray array] forKey:@"confirmedEvents"];
+    [self.parseObj setObject:friends forKey:@"friends"];
+    [self.parseObj setObject:invites forKey:@"invites"];
+    [self.parseObj setObject:events forKey:@"confirmedEvents"];
+    
+    [self.parseObj saveInBackground];
   }
   
   return self;
+}
+
++ (instancetype) signupUserWithUsername:(NSString *)username
+                               password:(NSString *)password
+{
+  PFObject *signupObj = [PFObject objectWithClassName:@"User"];
+  [signupObj setObject:username forKey:@"username"];
+  [signupObj setObject:password forKey:@"password"];
+  [signupObj setObject:[NSArray array] forKey:@"friends"];
+  [signupObj setObject:[NSArray array] forKey:@"invites"];
+  [signupObj setObject:[NSArray array] forKey:@"confirmedEvents"];
+  
+  [signupObj save];
+  
+  PFQuery *dupCheck = [PFQuery queryWithClassName:@"User"];
+  [dupCheck whereKey:@"username" equalTo:username];
+  [dupCheck whereKey:@"password" equalTo:password];
+  NSArray *users = [dupCheck findObjects];
+  
+  if ([users count] == 0) {
+    return nil;
+  }
+  else if ([users count] == 1) {
+    return [[SFUser alloc] initWithPFObject:users[0]];
+  }
+  else {  //duplicates
+    PFObject *earliest;
+    NSDate *earliestDate;
+    
+    for (PFObject *user in users) {
+      if (earliest == nil || [earliestDate compare:user.createdAt] == NSOrderedAscending) {
+        earliest = user;
+        earliestDate = user.createdAt;
+      }
+    }
+    
+    NSMutableArray *muteUsers = [NSMutableArray arrayWithArray:users];
+    [muteUsers removeObjectIdenticalTo:earliest];
+    [PFObject deleteAllInBackground:muteUsers];
+    
+    return nil;
+  }
+}
+
++ (instancetype) userWithID:(NSString *)userID
+{
+  PFObject *userObj = [PFQuery getObjectOfClass:@"User" objectId:userID];
+  return [[SFUser alloc] initWithPFObject:userObj];
+}
+
++ (instancetype) userWithUsername:(NSString *)username password:(NSString *)password
+{
+  PFQuery *findUser = [PFQuery queryWithClassName:@"User"];
+  [findUser whereKey:@"username" equalTo:username];
+  [findUser whereKey:@"password" equalTo:password];
+  
+  PFObject *userObj = [findUser getFirstObject];
+  return [[SFUser alloc] initWithPFObject:userObj];
 }
 
 - (void) addFriend:(NSString *)userID
@@ -69,7 +136,7 @@
 
 - (void) addFriends:(NSArray *)userIDs
 {
-  // algorithmically efficient, if not practically so
+  // conceptually efficient, if not practically so
   NSArray *updatedFriends = [[NSSet setWithArray:[self.friends arrayByAddingObjectsFromArray:userIDs]] allObjects];
   
   if ([updatedFriends count] != [self.friends count]) {
@@ -140,64 +207,6 @@
     [self.parseObj addObject:eventID forKey:@"invites"];
     [self.parseObj saveInBackground];
   }
-}
-
-+ (SFUser *) signupUserWithUsername:(NSString *)username
-                           password:(NSString *)password
-{
-  PFObject *signupObj = [PFObject objectWithClassName:@"User"];
-  [signupObj setObject:username forKey:@"username"];
-  [signupObj setObject:password forKey:@"password"];
-  [signupObj setObject:[NSArray array] forKey:@"friends"];
-  [signupObj setObject:[NSArray array] forKey:@"invites"];
-  [signupObj setObject:[NSArray array] forKey:@"confirmedEvents"];
-  
-  [signupObj save];
-  
-  PFQuery *dupCheck = [PFQuery queryWithClassName:@"User"];
-  [dupCheck whereKey:@"username" equalTo:username];
-  [dupCheck whereKey:@"password" equalTo:password];
-  NSArray *users = [dupCheck findObjects];
-  
-  if ([users count] == 0) {
-    return nil;
-  }
-  else if ([users count] == 1) {
-    return [[SFUser alloc] initWithPFObject:users[0]];
-  }
-  else {  //duplicate
-    PFObject *earliest;
-    NSDate *earliestDate;
-    
-    for (PFObject *user in users) {
-      if (earliest == nil || [earliestDate compare:user.createdAt] == NSOrderedAscending) {
-        earliest = user;
-        earliestDate = user.createdAt;
-      }
-    }
-    
-    NSMutableArray *muteUsers = [NSMutableArray arrayWithArray:users];
-    [muteUsers removeObjectIdenticalTo:earliest];
-    [PFObject deleteAllInBackground:muteUsers];
-    
-    return nil;
-  }
-}
-
-+ (SFUser *) userWithID:(NSString *)userID
-{
-  PFObject *userObj = [PFQuery getObjectOfClass:@"User" objectId:userID];
-  return [[SFUser alloc] initWithPFObject:userObj];
-}
-
-+ (SFUser *) userWithUsername:(NSString *)username password:(NSString *)password
-{
-  PFQuery *findUser = [PFQuery queryWithClassName:@"User"];
-  [findUser whereKey:@"username" equalTo:username];
-  [findUser whereKey:@"password" equalTo:password];
-  
-  PFObject *userObj = [findUser getFirstObject];
-  return [[SFUser alloc] initWithPFObject:userObj];
 }
 
 @end

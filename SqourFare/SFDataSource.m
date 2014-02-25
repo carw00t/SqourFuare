@@ -30,11 +30,11 @@ NSString * const SFWentEvents = @"Went Events";
 
 - (NSMutableDictionary *)getEvents
 {
-  NSArray *invitedEvents = [NSArray arrayWithObject:[[SFEvent alloc] initWithName:@"Union Grill" date:[NSDate date]]];
-  NSArray *goingEvents = [NSArray arrayWithObject:[[SFEvent alloc] initWithName:@"Chipotle" date:[NSDate date]]];
+//  NSArray *invitedEvents = [NSArray arrayWithObject:[[SFEvent alloc] initWithName:@"Union Grill" date:[NSDate date]]];
+//  NSArray *goingEvents = [NSArray arrayWithObject:[[SFEvent alloc] initWithName:@"Chipotle" date:[NSDate date]]];
   NSMutableDictionary *allEvents = [[NSMutableDictionary alloc] init];
-  [allEvents setValue:invitedEvents forKey:SFInvitedEvents];
-  [allEvents setValue:goingEvents forKey:SFGoingEvents];
+//  [allEvents setValue:invitedEvents forKey:SFInvitedEvents];
+//  [allEvents setValue:goingEvents forKey:SFGoingEvents];
   [allEvents setValue:[[NSArray alloc] init] forKey:SFWentEvents];
   return allEvents;
 }
@@ -67,12 +67,12 @@ NSString * const SFWentEvents = @"Went Events";
 - (NSMutableArray *)getUsers
 {
   NSMutableArray *users = [[NSMutableArray alloc] init];
-  SFUser *user1 = [[SFUser alloc] init];
-  user1.username = @"Dorufin";
-  SFUser *user2 = [[SFUser alloc] init];
-  user2.username = @"Whalu";
-  [users addObject:user1];
-  [users addObject:user2];
+//  SFUser *user1 = [[SFUser alloc] init];
+//  user1.username = @"Dorufin";
+//  SFUser *user2 = [[SFUser alloc] init];
+//  user2.username = @"Whalu";
+//  [users addObject:user1];
+//  [users addObject:user2];
   return users;
 }
 
