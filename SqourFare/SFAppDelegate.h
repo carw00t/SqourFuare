@@ -9,7 +9,6 @@
 #import <Parse/Parse.h>
 #import "SFLoginViewController.h"
 #import "SFHomeViewController.h"
-#import "SFDataSource.h"
 
 @interface SFAppDelegate : UIResponder <UIApplicationDelegate>
 

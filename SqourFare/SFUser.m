@@ -209,4 +209,20 @@
   }
 }
 
+- (NSArray *) getEventsOfType:(SFEventType) type
+{
+  NSArray *events;
+  switch (type) {
+    case SFGoingEvent:
+      events = self.confirmedEvents;
+      break;
+    case SFInvitedEvent:
+      events = self.invites;
+      break;
+    default:
+      break;
+  }
+  return events;
+}
+
 @end

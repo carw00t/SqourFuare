@@ -19,8 +19,7 @@
                 clientKey:@"fntzx9OFJiK7h4kysE4MvMIoDLbyabHujjOjM0xQ"];
   self.window.backgroundColor = [UIColor whiteColor];
   
-  SFDataSource *dataSource = [[SFDataSource alloc] init];
-  SFHomeViewController *homeViewController = [[SFHomeViewController alloc] initWithDataSource:dataSource];
+  SFHomeViewController *homeViewController = [[SFHomeViewController alloc] init];
   SFLoginViewController *loginViewController = [[SFLoginViewController alloc] init];
   loginViewController.loginDelegate = homeViewController;
   UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:homeViewController];

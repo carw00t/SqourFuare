@@ -7,18 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SFDataSource.h"
 #import "SFEvent.h"
 #import "SFHomeViewTableCell.h"
 #import "SFNewEventViewController.h"
 #import "SFMealInviteViewController.h"
+#import "SFEvent.h"
 
 @protocol LoginDelegate <NSObject>
 - (void)userLoggedIn:(SFUser *)user;
-- (id)initWithDataSource: (SFDataSource*) dataSource;
 @end
 
 @interface SFHomeViewController : UIViewController <LoginDelegate>
+
 @property (strong, nonatomic) IBOutlet UITableView *homeTableView;
 @property (strong, nonatomic) SFUser *loggedInUser;
 @end

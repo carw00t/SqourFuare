@@ -9,36 +9,27 @@
 #import "SFHomeViewController.h"
 
 @interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
-@property (strong, nonatomic) SFDataSource *dataSource;
+@property (strong, nonatomic) SFUser *theUser;
 @end
 
 @implementation SFHomeViewController
-- (id)initWithDataSource: (SFDataSource*) dataSource
+/*- (id)initWithDataSource: (SFDataSource*) dataSource
 {
   if (self = [super initWithNibName:@"SFHomeViewController" bundle:nil]) {
     self.dataSource = dataSource;
   }
   return self;
-}
+}*/
 
 - (void) userLoggedIn:(SFUser *)user
 {
+  self.theUser = user;
   [self.navigationController popToRootViewControllerAnimated:YES];
   [self.navigationController setNavigationBarHidden:NO animated:NO];
   NSLog(@"User %@ logged in", user.username);
   
-  // TODO(jacob) deprecate this
-  NSMutableDictionary *allEvents = [self.dataSource getEvents];
-  NSArray *goingEvents = [allEvents objectForKey:SFInvitedEvents];
-  NSLog(@"%@", goingEvents);
-  
   [self.homeTableView reloadData];
 }
-
-/**
- * Returns an dictionary of arrays. The inner arrays are arrays of events you've been
- * invited to, events you're going to, and events you've been to.
- */
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -65,7 +56,7 @@
 
 -(void)newMeal:(id)sender
 {
-  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithStyle:UITableViewStylePlain dataSource:self.dataSource];
+  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithStyle:UITableViewStylePlain];
   [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -86,7 +77,7 @@
   if (!cell) {
     cell = [[SFHomeViewTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HomeCell"];
   }
-  NSMutableArray *events = [self.dataSource getEventsForTableGroup: indexPath.section];
+  NSArray *events = [self.theUser getEventsOfType:indexPath.section];
   SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
   
   // Get the dates to display
@@ -106,26 +97,26 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  return [[self.dataSource getEventsForTableGroup:section] count];
+  return [[self.theUser getEventsOfType:section] count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-
-  return [[self.dataSource getEvents] count];
+  return SFNumberOfEventsTypes;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-  return [self.dataSource getKeyForSection:section];
+  return [SFEvent getEventNameFromType:section];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  NSArray *events = [self.dataSource getEventsForTableGroup:indexPath.section];
-  NSLog(@"Selected event: %@", [[events objectAtIndex:indexPath.row] name]);
+  NSArray *events = [self.theUser getEventsOfType:indexPath.section];
+  SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
+  NSLog(@"Selected event: %@", event.name);
   
-  SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithEvent:[events objectAtIndex:indexPath.row]];
+  SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithEvent:event];
   [self.navigationController pushViewController:mealVC animated:YES];
 }
 

@@ -14,20 +14,11 @@
 
 @implementation SFNewEventViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-- (id)initWithStyle:(UITableViewStyle)style dataSource:(SFDataSource*) dataSource
+- (id)initWithStyle:(UITableViewStyle)style user:(SFUser *) user
 {
   self = [super initWithStyle:style];
   if (self) {
-    self.dataSource = dataSource;
+    self.loggedInUser = user;
   }
   return self;
 }
@@ -73,7 +64,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  self.users = [self.dataSource getUsers];
+  self.users = self.loggedInUser.friends;
   NSInteger users = [self.users count];
   return users;
 }

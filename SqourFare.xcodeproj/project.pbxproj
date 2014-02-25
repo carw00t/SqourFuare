@@ -42,7 +42,6 @@
 		8EBA6F5218BAE999001A5639 /* SFHomeViewTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5118BAE999001A5639 /* SFHomeViewTableCell.m */; };
 		8EBA6F5618BB053B001A5639 /* SFNewEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5418BB053B001A5639 /* SFNewEventViewController.m */; };
 		8EBA6F5718BB053B001A5639 /* SFNewEventViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */; };
-		8EBA6F5A18BB0827001A5639 /* SFDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5918BB0827001A5639 /* SFDataSource.m */; };
 		8EBA6F6018BB1ACD001A5639 /* SFUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5F18BB1ACD001A5639 /* SFUser.m */; };
 		8EBA6F6418BB2C4A001A5639 /* SFMealInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F6218BB2C4A001A5639 /* SFMealInviteViewController.m */; };
 		8EBA6F6518BB2C4B001A5639 /* SFMealInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA6F6318BB2C4A001A5639 /* SFMealInviteViewController.xib */; };
@@ -103,8 +102,6 @@
 		8EBA6F5318BB053B001A5639 /* SFNewEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFNewEventViewController.h; sourceTree = "<group>"; };
 		8EBA6F5418BB053B001A5639 /* SFNewEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFNewEventViewController.m; sourceTree = "<group>"; };
 		8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFNewEventViewController.xib; sourceTree = "<group>"; };
-		8EBA6F5818BB0827001A5639 /* SFDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFDataSource.h; sourceTree = "<group>"; };
-		8EBA6F5918BB0827001A5639 /* SFDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFDataSource.m; sourceTree = "<group>"; };
 		8EBA6F5E18BB1ACD001A5639 /* SFUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFUser.h; sourceTree = "<group>"; };
 		8EBA6F5F18BB1ACD001A5639 /* SFUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFUser.m; sourceTree = "<group>"; };
 		8EBA6F6118BB2C4A001A5639 /* SFMealInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFMealInviteViewController.h; sourceTree = "<group>"; };
@@ -196,8 +193,6 @@
 				8E2E896918B55A990078DB5B /* RestaurantPickerView.xib */,
 				8E2E894518B559490078DB5B /* SFAppDelegate.h */,
 				8E2E894618B559490078DB5B /* SFAppDelegate.m */,
-				8EBA6F5818BB0827001A5639 /* SFDataSource.h */,
-				8EBA6F5918BB0827001A5639 /* SFDataSource.m */,
 				8E2E89C618B5ABE40078DB5B /* SFEvent.h */,
 				8E2E89C718B5ABE40078DB5B /* SFEvent.m */,
 				8E2E89C118B59D210078DB5B /* SFHomeViewController.h */,
@@ -369,7 +364,6 @@
 				8EBA6F5218BAE999001A5639 /* SFHomeViewTableCell.m in Sources */,
 				8E2E894318B559490078DB5B /* main.m in Sources */,
 				8E2E89C418B59D210078DB5B /* SFHomeViewController.m in Sources */,
-				8EBA6F5A18BB0827001A5639 /* SFDataSource.m in Sources */,
 				8E2E89C818B5ABE40078DB5B /* SFEvent.m in Sources */,
 				8EBA6F6418BB2C4A001A5639 /* SFMealInviteViewController.m in Sources */,
 				8EBA6F6018BB1ACD001A5639 /* SFUser.m in Sources */,

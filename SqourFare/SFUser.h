@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Parse/Parse.h>
+#import "SFEvent.h"
 
 @interface SFUser : NSObject
 
@@ -23,6 +24,8 @@
 - (void) removeFriend:(NSString *)userID;
 - (void) removeFriends:(NSArray *)userIDs;
 - (void) unconfirmEvent:(NSString *)eventID;
+- (NSArray *) getEventsOfType:(SFEventType) type;
+
 
 - (NSString *) userID;
 - (NSString *) username;

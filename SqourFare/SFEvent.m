@@ -9,6 +9,10 @@
 #import "SFEvent.h"
 #import <Parse/Parse.h>
 
+NSString * const SFGoingEventName = @"Going Events";
+NSString * const SFInvitedEventName = @"Invited Events";
+NSString * const SFWentEventName = @"Went Events";
+
 @interface SFEvent ()
 
 @property (strong, nonatomic) NSString *eventID;
@@ -241,6 +245,26 @@
 - (void) tallyVotes
 {
   NSLog(@"This should eventually tally all votes for the event and set the venueID appropriately.");
+}
+
++ (NSString *)getEventNameFromType: (SFEventType) type
+{
+  NSString *eventsKey;
+  switch (type) {
+    case SFGoingEvent:
+      eventsKey = SFGoingEventName;
+      break;
+    case 1:
+      eventsKey = SFInvitedEventName;
+      break;
+    case 2:
+      eventsKey = SFWentEventName;
+      break;
+    default:
+      eventsKey = @"error";
+      break;
+  }
+  return eventsKey;
 }
 
 @end
