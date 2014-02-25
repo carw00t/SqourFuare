@@ -11,6 +11,7 @@
 #import "SFEvent.h"
 #import "SFHomeViewTableCell.h"
 #import "SFNewEventViewController.h"
+#import "SFMealInviteViewController.h"
 
 @protocol LoginDelegate <NSObject>
 - (void)userLoggedIn:(SFUser *)user;

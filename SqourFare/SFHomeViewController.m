@@ -99,7 +99,7 @@
   NSInteger eventMinute = [components minute];
   
   cell.restaurantNameLabel.text = event.name;
-  cell.dayLabel.text = [NSString stringWithFormat:@"+%ld", (eventDay - currDay)];
+  cell.dayLabel.text = [NSString stringWithFormat:@"+%d", (eventDay - currDay)];
   cell.timeLabel.text = [NSString stringWithFormat:@"%d:%d", (int)eventHour, (int)eventMinute];
   return cell;
 }
@@ -124,6 +124,9 @@
 {
   NSArray *events = [self.dataSource getEventsForTableGroup:indexPath.section];
   NSLog(@"Selected event: %@", [[events objectAtIndex:indexPath.row] name]);
+  
+  SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithEvent:[events objectAtIndex:indexPath.row]];
+  [self.navigationController pushViewController:mealVC animated:YES];
 }
 
 @end

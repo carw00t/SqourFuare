@@ -14,6 +14,14 @@
 
 @implementation SFMealInviteViewController
 
+- (instancetype) initWithEvent:(SFEvent *)event
+{
+  if (self = [super init]) {
+    self.event = event;
+  }
+  return self;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -36,6 +44,8 @@
 }
 
 - (IBAction)timeChooser:(UISegmentedControl *)sender {
+  
+  NSLog(@"selected segments: %d", [sender selectedSegmentIndex]);
 }
 
 - (IBAction)chooseRestaurantButton:(UIButton *)sender {
