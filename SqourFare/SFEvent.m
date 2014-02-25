@@ -83,13 +83,7 @@
   return self;
 }
 
-+ (instancetype) eventWithID:(NSString *)eventID
-{
-  PFObject *eventObj = [PFQuery getObjectOfClass:@"Event" objectId:eventID];
-  return [[SFEvent alloc] initWithPFObject:eventObj];
-}
-
-+ (instancetype) newEventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID
++ (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID
 {
   PFObject *eventObj = [PFObject objectWithClassName:@"Event"];
   [eventObj setObject:name forKey:@"name"];
@@ -131,6 +125,23 @@
     
     return nil;
   }
+}
+
++ (instancetype) eventWithID:(NSString *)eventID
+{
+  PFObject *eventObj = [PFQuery getObjectOfClass:@"Event" objectId:eventID];
+  return [[SFEvent alloc] initWithPFObject:eventObj];
+}
+
++ (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID
+{
+  PFQuery *findEvent = [PFQuery queryWithClassName:@"Event"];
+  [findEvent whereKey:@"name" equalTo:name];
+  [findEvent whereKey:@"host" equalTo:hostID];
+  [findEvent whereKey:@"date" equalTo:date];
+  
+  PFObject *eventObj = [findEvent getFirstObject];
+  return [[SFEvent alloc] initWithPFObject:eventObj];
 }
 
 - (void) addVote:(NSString *)voteID

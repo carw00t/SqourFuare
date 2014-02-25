@@ -39,6 +39,7 @@
 - (NSArray *) votes;
 
 + (instancetype) eventWithID:(NSString *)eventID;
-+ (instancetype) newEventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
++ (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
++ (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
 
 @end
