@@ -16,6 +16,7 @@
 		163494E318B5AA440086D393 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494DA18B5AA440086D393 /* Security.framework */; };
 		163494E418B5AA440086D393 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494DB18B5AA440086D393 /* StoreKit.framework */; };
 		163494E518B5AA440086D393 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494DC18B5AA440086D393 /* SystemConfiguration.framework */; };
+		16989A6218BC4D49004C9290 /* SFVote.m in Sources */ = {isa = PBXBuildFile; fileRef = 16989A6118BC4D49004C9290 /* SFVote.m */; };
 		8E2E893718B559490078DB5B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E893618B559490078DB5B /* Foundation.framework */; };
 		8E2E893918B559490078DB5B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E893818B559490078DB5B /* CoreGraphics.framework */; };
 		8E2E893B18B559490078DB5B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E893A18B559490078DB5B /* UIKit.framework */; };
@@ -68,6 +69,8 @@
 		163494DA18B5AA440086D393 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		163494DB18B5AA440086D393 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		163494DC18B5AA440086D393 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		16989A6018BC4D49004C9290 /* SFVote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFVote.h; sourceTree = "<group>"; };
+		16989A6118BC4D49004C9290 /* SFVote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFVote.m; sourceTree = "<group>"; };
 		8E2E893318B559490078DB5B /* SqourFare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SqourFare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E2E893618B559490078DB5B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8E2E893818B559490078DB5B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -221,6 +224,8 @@
 				8E2E894618B559490078DB5B /* SFAppDelegate.m */,
 				8E2E894818B559490078DB5B /* Images.xcassets */,
 				8E2E893D18B559490078DB5B /* Supporting Files */,
+				16989A6018BC4D49004C9290 /* SFVote.h */,
+				16989A6118BC4D49004C9290 /* SFVote.m */,
 			);
 			path = SqourFare;
 			sourceTree = "<group>";
@@ -359,6 +364,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16989A6218BC4D49004C9290 /* SFVote.m in Sources */,
 				8EBA6F5618BB053B001A5639 /* SFNewEventViewController.m in Sources */,
 				8E2E89BA18B5996D0078DB5B /* SFLoginViewController.m in Sources */,
 				8EBA6F5218BAE999001A5639 /* SFHomeViewTableCell.m in Sources */,
