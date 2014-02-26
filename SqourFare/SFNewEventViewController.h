@@ -10,6 +10,6 @@
 #import "SFUser.h"
 
 @interface SFNewEventViewController : UITableViewController
-- (id)initWithStyle:(UITableViewStyle)style user:(SFUser *) user;
+- (instancetype)initWithStyle:(UITableViewStyle)style user:(SFUser *) user;
 @property (strong, nonatomic) SFUser *loggedInUser;
 @end

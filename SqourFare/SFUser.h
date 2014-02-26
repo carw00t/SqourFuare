@@ -25,6 +25,7 @@
 - (void) removeFriends:(NSArray *)userIDs;
 - (void) unconfirmEvent:(NSString *)eventID;
 - (NSArray *) getEventsOfType:(SFEventType) type;
+- (NSArray *) getFriends;
 
 - (NSString *) userID;
 - (NSString *) username;

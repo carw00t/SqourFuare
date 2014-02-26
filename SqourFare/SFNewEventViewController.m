@@ -64,7 +64,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  self.users = self.loggedInUser.friends;
+  self.users = [self.loggedInUser getFriends];
   NSInteger users = [self.users count];
   return users;
 }
@@ -77,7 +77,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 
-    SFUser *user = [self.users objectAtIndex:indexPath.row];
+  SFUser *user = [[self.loggedInUser getFriends] objectAtIndex:indexPath.row];
     cell.textLabel.text = user.username;
   
     return cell;
