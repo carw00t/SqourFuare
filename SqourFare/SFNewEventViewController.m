@@ -17,6 +17,7 @@
 {
   if (self = [super initWithNibName:@"SFNewEventViewController" bundle:nil]) {
     self.loggedInUser = user;
+    self.users = friends;
   }
   return self;
 }
@@ -59,9 +60,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  self.users = [self.loggedInUser getFriends];
-  NSInteger users = [self.users count];
-  return users;
+  return [self.users count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
