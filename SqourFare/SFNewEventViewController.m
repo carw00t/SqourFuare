@@ -13,7 +13,7 @@
 @end
 
 @implementation SFNewEventViewController
-- (id)initWithUser: (SFUser *) user userFriends: (NSArray *) friends
+- (id)initWithUser:(SFUser *)user userFriends:(NSArray *)friends
 {
   if (self = [super initWithNibName:@"SFNewEventViewController" bundle:nil]) {
     self.loggedInUser = user;
@@ -24,17 +24,20 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-
+  [super viewDidLoad];
+  
   UIBarButtonItem *inviteButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(inviteFriends:)];
   self.navigationItem.rightBarButtonItem = inviteButton;
-
-  self.title = @"Who's invited?";
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+  
+  self.title = @"New Event?";
+  
+  self.friendTableView.delegate = self;
+  self.friendTableView.dataSource = self;
+  // Uncomment the following line to preserve selection between presentations.
+  // self.clearsSelectionOnViewWillAppear = NO;
+  
+  // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+  // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 -(void)inviteFriends:(id)sender

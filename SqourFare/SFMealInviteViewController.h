@@ -10,11 +10,14 @@
 #import "SFEvent.h"
 
 @interface SFMealInviteViewController : UIViewController
+
+@property (strong, nonatomic) IBOutlet UILabel *timeLabel;
+@property (strong, nonatomic) IBOutlet UITableView *inviteeTableView;
+@property (strong, nonatomic) SFEvent *event;
+
 - (IBAction)timeChooser:(UISegmentedControl *)sender;
-- (IBAction)chooseRestaurantButton:(UIButton *)sender;
 - (IBAction)acceptInviteButton:(UIButton *)sender;
 - (IBAction)rejectInviteButton:(UIButton *)sender;
 - (instancetype)initWithEvent:(SFEvent *)event;
-@property (strong, nonatomic) IBOutlet UITableView *inviteeTableView;
-@property (strong, nonatomic) SFEvent *event;
+
 @end

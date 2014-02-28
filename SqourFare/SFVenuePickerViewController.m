@@ -10,7 +10,7 @@
 
 static NSString * const clientId = @"42SYZZI4H5NZHFFI0UNEGW51INGXKDUUG2OQCDLMRV3IJKHQ";
 static NSString * const clientSecret = @"RBHL3IV51VYYGDNJZ2HSS2IFGRPB4AH3QVFXGUU2OCDEAZTV";
-static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/venues/search";
+static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/venues/explore";
 
 @interface SFVenuePickerViewController ()
 
@@ -34,7 +34,7 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   // Gates
   CLLocationDegrees lat = 40.4437566;
   CLLocationDegrees lng = -79.9444789;
-  NSString *endpoint = [NSString stringWithFormat:@"%@?ll=%.5f,%.5f&client_id=%@&client_secret=%@&intent=browse&radius=1000&v=20140227",
+  NSString *endpoint = [NSString stringWithFormat:@"%@?ll=%.5f,%.5f&client_id=%@&client_secret=%@&section=food&v=20140227",
                         foursquareEndpoint,
                         lat,
                         lng,
@@ -43,13 +43,17 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   
   NSData *result = [NSData dataWithContentsOfURL:[NSURL URLWithString:endpoint]];
   NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
-  NSLog(@"results: %@", resultDict);
   
-  NSArray *venues = [[resultDict objectForKey:@"response"] objectForKey:@"venues"];
+  // NSLog(@"results: %@", [[[resultDict objectForKey:@"response"] objectForKey:@"groups"] objectForKey:@"items"]);
+  //NSLog(@"results: %@", [[[resultDict objectForKey:@"response"] objectForKey:@"groups"] objectAtIndex:0]);
+  
+  // this is right. trust me
+  NSArray *venues = [[[[resultDict objectForKey:@"response"] objectForKey:@"groups"] objectAtIndex:0] objectForKey:@"items"];
+  
   // TODO(jacob) may eventually want to store more info than just a name
   NSMutableArray *venueNames = [NSMutableArray arrayWithCapacity:venues.count];
   [venues enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
-    venueNames[idx] = [dict objectForKey:@"name"];
+    venueNames[idx] = [[dict objectForKey:@"venue"] objectForKey:@"name"];
   }];
 
   return venueNames;
