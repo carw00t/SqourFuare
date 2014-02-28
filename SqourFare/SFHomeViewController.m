@@ -56,7 +56,7 @@
 
 -(void)newMeal:(id)sender
 {
-  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithStyle:UITableViewStylePlain user:self.theUser];
+  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithUser:self.theUser];
   [self.navigationController pushViewController:viewController animated:YES];
 }
 
