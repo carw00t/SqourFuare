@@ -31,9 +31,9 @@
 - (NSArray *) friends;
 - (NSArray *) inviteIDs;
 - (NSArray *) confirmedEventIDs;
+- (NSArray *) getFriends;
 
 + (instancetype) signupUserWithUsername:(NSString *)username password:(NSString *)password;
 + (instancetype) userWithID:(NSString *)userID;
 + (instancetype) userWithUsername:(NSString *)username password:(NSString *)password;
-
 @end

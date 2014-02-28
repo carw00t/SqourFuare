@@ -2,22 +2,20 @@
 //  SFNewEventViewController.m
 //  SqourFare
 //
-//  Created by Tanner Whyte on 2/23/14.
+//  Created by Tanner Whyte on 2/27/14.
 //  Copyright (c) 2014 whyte.tanner. All rights reserved.
 //
 
 #import "SFNewEventViewController.h"
 
-@interface SFNewEventViewController ()
-@property (nonatomic, strong) NSArray *users;
+@interface SFNewEventViewController () <UITableViewDataSource, UITableViewDelegate>
+@property (strong, nonatomic) NSArray *users;
 @end
 
 @implementation SFNewEventViewController
-
-- (id)initWithStyle:(UITableViewStyle)style user:(SFUser *)user userFriends:(NSArray *)friends
+- (id)initWithUser: (SFUser *) user userFriends: (NSArray *) friends
 {
-  self = [super initWithStyle:style];
-  if (self) {
+  if (self = [super initWithNibName:@"SFNewEventViewController" bundle:nil]) {
     self.loggedInUser = user;
     self.users = friends;
   }
@@ -41,18 +39,12 @@
 
 -(void)inviteFriends:(id)sender
 {
-  NSArray *indexPaths = [self.tableView indexPathsForSelectedRows];
+  NSArray *indexPaths = [self.friendTableView indexPathsForSelectedRows];
   NSLog(@"Time to invite...");
   for (NSIndexPath *indexPath in indexPaths) {
     NSLog(@"%@", [[self.users objectAtIndex:indexPath.row] username]);
   }
   [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
@@ -73,70 +65,19 @@
   static NSString *CellIdentifier = @"Cell";
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
   if (cell == nil) {
-      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
   }
-
-  SFUser *user = [self.users objectAtIndex:indexPath.row];
+  
+  SFUser *user = [[self.loggedInUser getFriends] objectAtIndex:indexPath.row];
   cell.textLabel.text = user.username;
   
   return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)didReceiveMemoryWarning
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Table view delegate
-
-// In a xib-based application, navigation from a table can be handled in -tableView:didSelectRowAtIndexPath:
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here, for example:
-    // Create the next view controller.
-    <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-
-    // Pass the selected object to the new view controller.
-    
-    // Push the view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-}
- 
- */
 
 @end
