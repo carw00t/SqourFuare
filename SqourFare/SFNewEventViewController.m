@@ -28,8 +28,8 @@
 {
     [super viewDidLoad];
 
-  UIBarButtonItem *newReminderButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(inviteFriends:)];
-  self.navigationItem.rightBarButtonItem = newReminderButton;
+  UIBarButtonItem *inviteButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(inviteFriends:)];
+  self.navigationItem.rightBarButtonItem = inviteButton;
 
   self.title = @"Who's invited?";
     // Uncomment the following line to preserve selection between presentations.

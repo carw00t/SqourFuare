@@ -26,7 +26,7 @@
   self.loggedInUser = user;
   self.userFriends = [NSMutableArray arrayWithArray:user.friends];
   [self.userFriends enumerateObjectsUsingBlock:^(NSString *friendID, NSUInteger idx, BOOL *stop) {
-    dispatch_async(dispatch_get_global_queue(0,0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
       [self.userFriends replaceObjectAtIndex:idx withObject:[SFUser userWithID:friendID]];
     });
   }];

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		161153A218C029A600673FFC /* SFVenuePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 161153A018C029A600673FFC /* SFVenuePickerViewController.m */; };
+		161153A318C029A600673FFC /* SFVenuePickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 161153A118C029A600673FFC /* SFVenuePickerViewController.xib */; };
 		163494DD18B5AA440086D393 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494D418B5AA440086D393 /* AudioToolbox.framework */; };
 		163494DE18B5AA440086D393 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494D518B5AA440086D393 /* CFNetwork.framework */; };
 		163494DF18B5AA440086D393 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494D618B5AA440086D393 /* CoreLocation.framework */; };
@@ -29,7 +31,6 @@
 		8E2E895218B559490078DB5B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E2E893A18B559490078DB5B /* UIKit.framework */; };
 		8E2E895A18B559490078DB5B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E895818B559490078DB5B /* InfoPlist.strings */; };
 		8E2E895C18B559490078DB5B /* SqourFareTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2E895B18B559490078DB5B /* SqourFareTests.m */; };
-		8E2E896A18B55A990078DB5B /* RestaurantPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E896918B55A990078DB5B /* RestaurantPickerView.xib */; };
 		8E2E896E18B55CCB0078DB5B /* MealPlanView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E896D18B55CCB0078DB5B /* MealPlanView.xib */; };
 		8E2E89BA18B5996D0078DB5B /* SFLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E2E89B818B5996D0078DB5B /* SFLoginViewController.m */; };
 		8E2E89BB18B5996D0078DB5B /* SFLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8E2E89B918B5996D0078DB5B /* SFLoginViewController.xib */; };
@@ -57,6 +58,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1611539F18C029A600673FFC /* SFVenuePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFVenuePickerViewController.h; sourceTree = "<group>"; };
+		161153A018C029A600673FFC /* SFVenuePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFVenuePickerViewController.m; sourceTree = "<group>"; };
+		161153A118C029A600673FFC /* SFVenuePickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFVenuePickerViewController.xib; sourceTree = "<group>"; };
 		163494D218B5A94E0086D393 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		163494D418B5AA440086D393 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		163494D518B5AA440086D393 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -85,7 +89,6 @@
 		8E2E895718B559490078DB5B /* SqourFareTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SqourFareTests-Info.plist"; sourceTree = "<group>"; };
 		8E2E895918B559490078DB5B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		8E2E895B18B559490078DB5B /* SqourFareTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SqourFareTests.m; sourceTree = "<group>"; };
-		8E2E896918B55A990078DB5B /* RestaurantPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RestaurantPickerView.xib; sourceTree = "<group>"; };
 		8E2E896D18B55CCB0078DB5B /* MealPlanView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = MealPlanView.xib; path = ../MealPlanView.xib; sourceTree = "<group>"; };
 		8E2E89B718B5996D0078DB5B /* SFLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFLoginViewController.h; sourceTree = "<group>"; };
 		8E2E89B818B5996D0078DB5B /* SFLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFLoginViewController.m; sourceTree = "<group>"; };
@@ -187,7 +190,6 @@
 			children = (
 				8E2E894818B559490078DB5B /* Images.xcassets */,
 				8E2E896D18B55CCB0078DB5B /* MealPlanView.xib */,
-				8E2E896918B55A990078DB5B /* RestaurantPickerView.xib */,
 				8E2E894518B559490078DB5B /* SFAppDelegate.h */,
 				8E2E894618B559490078DB5B /* SFAppDelegate.m */,
 				8E2E89C618B5ABE40078DB5B /* SFEvent.h */,
@@ -201,7 +203,6 @@
 				8E2E89B718B5996D0078DB5B /* SFLoginViewController.h */,
 				8E2E89B818B5996D0078DB5B /* SFLoginViewController.m */,
 				8E2E89B918B5996D0078DB5B /* SFLoginViewController.xib */,
-				8E2E896D18B55CCB0078DB5B /* MealPlanView.xib */,
 				8EBA6F6118BB2C4A001A5639 /* SFMealInviteViewController.h */,
 				8EBA6F6218BB2C4A001A5639 /* SFMealInviteViewController.m */,
 				8EBA6F6318BB2C4A001A5639 /* SFMealInviteViewController.xib */,
@@ -210,14 +211,17 @@
 				8EBA6F5518BB053B001A5639 /* SFNewEventViewController.xib */,
 				8EBA6F5E18BB1ACD001A5639 /* SFUser.h */,
 				8EBA6F5F18BB1ACD001A5639 /* SFUser.m */,
+				1611539F18C029A600673FFC /* SFVenuePickerViewController.h */,
+				161153A018C029A600673FFC /* SFVenuePickerViewController.m */,
+				161153A118C029A600673FFC /* SFVenuePickerViewController.xib */,
+				16989A6018BC4D49004C9290 /* SFVote.h */,
+				16989A6118BC4D49004C9290 /* SFVote.m */,
 				8E2E893D18B559490078DB5B /* Supporting Files */,
-				8E2E896918B55A990078DB5B /* RestaurantPickerView.xib */,
+				8E2E896D18B55CCB0078DB5B /* MealPlanView.xib */,
 				8E2E894518B559490078DB5B /* SFAppDelegate.h */,
 				8E2E894618B559490078DB5B /* SFAppDelegate.m */,
 				8E2E894818B559490078DB5B /* Images.xcassets */,
 				8E2E893D18B559490078DB5B /* Supporting Files */,
-				16989A6018BC4D49004C9290 /* SFVote.h */,
-				16989A6118BC4D49004C9290 /* SFVote.m */,
 			);
 			path = SqourFare;
 			sourceTree = "<group>";
@@ -337,8 +341,8 @@
 				8E2E894918B559490078DB5B /* Images.xcassets in Resources */,
 				8EBA6F4F18BAE3AB001A5639 /* SFHomeViewTableCell.xib in Resources */,
 				8E2E896E18B55CCB0078DB5B /* MealPlanView.xib in Resources */,
+				161153A318C029A600673FFC /* SFVenuePickerViewController.xib in Resources */,
 				8E2E89C518B59D210078DB5B /* SFHomeViewController.xib in Resources */,
-				8E2E896A18B55A990078DB5B /* RestaurantPickerView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -359,6 +363,7 @@
 			files = (
 				16989A6218BC4D49004C9290 /* SFVote.m in Sources */,
 				8EBA6F5618BB053B001A5639 /* SFNewEventViewController.m in Sources */,
+				161153A218C029A600673FFC /* SFVenuePickerViewController.m in Sources */,
 				8E2E89BA18B5996D0078DB5B /* SFLoginViewController.m in Sources */,
 				8EBA6F5218BAE999001A5639 /* SFHomeViewTableCell.m in Sources */,
 				8E2E894318B559490078DB5B /* main.m in Sources */,
