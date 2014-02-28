@@ -15,5 +15,5 @@
 @property (strong, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (strong, nonatomic) IBOutlet UITextField *eventNameField;
 
-- (id)initWithUser: (SFUser *) user;
+- (id)initWithUser: (SFUser *) user userFriends: (NSArray *) friends;
 @end

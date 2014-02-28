@@ -13,7 +13,7 @@
 @end
 
 @implementation SFNewEventViewController
-- (id)initWithUser: (SFUser *) user
+- (id)initWithUser: (SFUser *) user userFriends: (NSArray *) friends
 {
   if (self = [super initWithNibName:@"SFNewEventViewController" bundle:nil]) {
     self.loggedInUser = user;

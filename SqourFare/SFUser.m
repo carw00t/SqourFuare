@@ -229,4 +229,13 @@
   return events;
 }
 
+- (NSArray *) getFriends
+{
+  NSMutableArray *friends = [NSMutableArray array];
+  for (NSString *friendID in self.friends) {
+    [friends addObject:[SFUser userWithID:friendID]];
+  }
+  return friends;
+}
+
 @end

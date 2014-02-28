@@ -62,7 +62,7 @@
 
 -(void)newMeal:(id)sender
 {
-  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithUser:self.theUser];
+  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithUser:self.loggedInUser userFriends:self.userFriends];
   [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -96,7 +96,7 @@
   NSInteger eventMinute = [components minute];
   
   cell.restaurantNameLabel.text = event.name;
-  cell.dayLabel.text = [NSString stringWithFormat:@"+%ld", (eventDay - currDay)];
+  cell.dayLabel.text = [NSString stringWithFormat:@"+%d", (eventDay - currDay)];
   cell.timeLabel.text = [NSString stringWithFormat:@"%d:%d", (int)eventHour, (int)eventMinute];
   return cell;
 }
