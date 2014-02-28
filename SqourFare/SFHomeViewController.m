@@ -9,7 +9,7 @@
 #import "SFHomeViewController.h"
 
 @interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
-@property (strong, nonatomic) SFUser *theUser;
+@property (strong, nonatomic) NSMutableArray *userFriends;
 @end
 
 @implementation SFHomeViewController
@@ -23,7 +23,13 @@
 
 - (void) userLoggedIn:(SFUser *)user
 {
-  self.theUser = user;
+  self.loggedInUser = user;
+  self.userFriends = [NSMutableArray arrayWithArray:user.friends];
+  [self.userFriends enumerateObjectsUsingBlock:^(NSString *friendID, NSUInteger idx, BOOL *stop) {
+    dispatch_async(dispatch_get_global_queue(0,0), ^{
+      [self.userFriends replaceObjectAtIndex:idx withObject:[SFUser userWithID:friendID]];
+    });
+  }];
   [self.navigationController popToRootViewControllerAnimated:YES];
   [self.navigationController setNavigationBarHidden:NO animated:NO];
   NSLog(@"User %@ logged in", user.username);
@@ -48,15 +54,15 @@
   self.homeTableView.delegate = self;
   self.homeTableView.dataSource = self;
   
-  UIBarButtonItem *newReminderButton = [[UIBarButtonItem alloc] initWithTitle:@"New Meal" style:UIBarButtonItemStylePlain target:self action:@selector(newMeal:)];
-  self.navigationItem.rightBarButtonItem = newReminderButton;
+  UIBarButtonItem *newMealButton = [[UIBarButtonItem alloc] initWithTitle:@"New Meal" style:UIBarButtonItemStylePlain target:self action:@selector(newMeal:)];
+  self.navigationItem.rightBarButtonItem = newMealButton;
   
   [self.homeTableView registerNib:[UINib nibWithNibName:@"SFHomeViewTableCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"HomeCell"];
 }
 
 -(void)newMeal:(id)sender
 {
-  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithStyle:UITableViewStylePlain user:self.theUser];
+  SFNewEventViewController *viewController = [[SFNewEventViewController alloc] initWithStyle:UITableViewStylePlain user:self.loggedInUser userFriends:self.userFriends];
   [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -77,7 +83,7 @@
   if (!cell) {
     cell = [[SFHomeViewTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HomeCell"];
   }
-  NSArray *events = [self.theUser getEventsOfType:indexPath.section];
+  NSArray *events = [self.loggedInUser getEventsOfType:indexPath.section];
   SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
   
   // Get the dates to display
@@ -90,14 +96,14 @@
   NSInteger eventMinute = [components minute];
   
   cell.restaurantNameLabel.text = event.name;
-  cell.dayLabel.text = [NSString stringWithFormat:@"+%d", (eventDay - currDay)];
+  cell.dayLabel.text = [NSString stringWithFormat:@"+%ld", (eventDay - currDay)];
   cell.timeLabel.text = [NSString stringWithFormat:@"%d:%d", (int)eventHour, (int)eventMinute];
   return cell;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  return [[self.theUser getEventsOfType:section] count];
+  return [[self.loggedInUser getEventsOfType:section] count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -112,7 +118,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  NSArray *events = [self.theUser getEventsOfType:indexPath.section];
+  NSArray *events = [self.loggedInUser getEventsOfType:indexPath.section];
   SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
   NSLog(@"Selected event: %@", event.name);
   

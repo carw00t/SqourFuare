@@ -45,7 +45,7 @@
 
 - (IBAction)timeChooser:(UISegmentedControl *)sender {
   
-  NSLog(@"selected segments: %d", [sender selectedSegmentIndex]);
+  NSLog(@"selected segments: %ld", [sender selectedSegmentIndex]);
 }
 
 - (IBAction)chooseRestaurantButton:(UIButton *)sender {

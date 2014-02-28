@@ -14,11 +14,12 @@
 
 @implementation SFNewEventViewController
 
-- (id)initWithStyle:(UITableViewStyle)style user:(SFUser *) user
+- (id)initWithStyle:(UITableViewStyle)style user:(SFUser *)user userFriends:(NSArray *)friends
 {
   self = [super initWithStyle:style];
   if (self) {
     self.loggedInUser = user;
+    self.users = friends;
   }
   return self;
 }
@@ -64,23 +65,21 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  self.users = [self.loggedInUser getFriends];
-  NSInteger users = [self.users count];
-  return users;
+  return [self.users count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
+  static NSString *CellIdentifier = @"Cell";
+  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+  if (cell == nil) {
+      cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+  }
 
-  SFUser *user = [[self.loggedInUser getFriends] objectAtIndex:indexPath.row];
-    cell.textLabel.text = user.username;
+  SFUser *user = [self.users objectAtIndex:indexPath.row];
+  cell.textLabel.text = user.username;
   
-    return cell;
+  return cell;
 }
 
 /*
