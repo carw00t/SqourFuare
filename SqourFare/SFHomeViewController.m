@@ -122,7 +122,7 @@
   SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
   NSLog(@"Selected event: %@", event.name);
   
-  SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithEvent:event];
+  SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithUser:self.loggedInUser event:event];
   [self.navigationController pushViewController:mealVC animated:YES];
 }
 

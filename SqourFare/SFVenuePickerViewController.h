@@ -14,4 +14,6 @@
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) IBOutlet UITableView *venueTable;
 
+- (id)initWithUser:(SFUser *)user event:(SFEvent *)event;
+
 @end

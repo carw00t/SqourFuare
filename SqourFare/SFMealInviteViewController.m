@@ -11,14 +11,17 @@
 
 @interface SFMealInviteViewController ()
 
+@property (strong, nonatomic) SFUser *loggedInUser;
+
 @end
 
 @implementation SFMealInviteViewController
 
-- (instancetype) initWithEvent:(SFEvent *)event
+- (id) initWithUser:(SFUser *)user event:(SFEvent *)event
 {
   if (self = [super init]) {
     self.event = event;
+    self.loggedInUser = user;
   }
   return self;
 }
@@ -44,7 +47,7 @@
 
 -(void)voteForVenues:(id)sender
 {
-  SFVenuePickerViewController *venuePicker = [[SFVenuePickerViewController alloc] init];
+  SFVenuePickerViewController *venuePicker = [[SFVenuePickerViewController alloc] initWithUser:self.loggedInUser event:self.event];
   [self.navigationController pushViewController:venuePicker animated:YES];
 }
 

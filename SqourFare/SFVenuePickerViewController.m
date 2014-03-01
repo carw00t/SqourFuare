@@ -6,6 +6,9 @@
 //  Copyright (c) 2014 whyte.tanner. All rights reserved.
 //
 
+#import "SFEvent.h"
+#import "SFUser.h"
+#import "SFVote.h"
 #import "SFVenuePickerViewController.h"
 
 static NSString * const clientId = @"42SYZZI4H5NZHFFI0UNEGW51INGXKDUUG2OQCDLMRV3IJKHQ";
@@ -14,16 +17,20 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 
 @interface SFVenuePickerViewController ()
 
+@property (strong, nonatomic) SFEvent *event;
+@property (strong, nonatomic) SFUser *loggedInUser;
 @property (strong, nonatomic) NSArray *venues;
 
 @end
 
 @implementation SFVenuePickerViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithUser:(SFUser *)user event:(SFEvent *)event
 {
-  self = [super initWithStyle:style];
+  self = [super init];
   if (self) {
+    self.event = event;
+    self.loggedInUser = user;
     self.venues = [self getVenues];
   }
   return self;
@@ -44,24 +51,42 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   NSData *result = [NSData dataWithContentsOfURL:[NSURL URLWithString:endpoint]];
   NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
   
-  // NSLog(@"results: %@", [[[resultDict objectForKey:@"response"] objectForKey:@"groups"] objectForKey:@"items"]);
-  //NSLog(@"results: %@", [[[resultDict objectForKey:@"response"] objectForKey:@"groups"] objectAtIndex:0]);
-  
   // this is right. trust me
   NSArray *venues = [[[[resultDict objectForKey:@"response"] objectForKey:@"groups"] objectAtIndex:0] objectForKey:@"items"];
   
-  // TODO(jacob) may eventually want to store more info than just a name
-  NSMutableArray *venueNames = [NSMutableArray arrayWithCapacity:venues.count];
+  // TODO(jacob) may eventually want to store more info than just a name and id
+  NSMutableArray *venueDicts = [NSMutableArray arrayWithCapacity:venues.count];
   [venues enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
-    venueNames[idx] = [[dict objectForKey:@"venue"] objectForKey:@"name"];
+    NSMutableDictionary *idxDict = [NSMutableDictionary dictionary];
+    idxDict[@"name"] = [[dict objectForKey:@"venue"] objectForKey:@"name"];
+    idxDict[@"id"] = [[dict objectForKey:@"venue"] objectForKey:@"id"];
+    venueDicts[idx] = idxDict;
   }];
 
-  return venueNames;
+  return venueDicts;
+}
+
+- (void) placeVotes:(id)sender
+{
+  NSArray *indexPaths = [self.venueTable indexPathsForSelectedRows];
+  
+  NSLog(@"Recording votes...");
+  for (NSIndexPath *indexPath in indexPaths) {
+    NSLog(@"%@", [self.venues objectAtIndex:indexPath.row][@"name"]);
+    [SFVote newVoteWithUserID:self.loggedInUser.userID eventID:self.event.eventID
+                      venueID:[self.venues objectAtIndex:indexPath.row][@"id"]
+                     voteType:[NSNumber numberWithInt:1]];
+  }
+  
+  [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewDidLoad
 {
   [super viewDidLoad];
+  
+  UIBarButtonItem *voteButton = [[UIBarButtonItem alloc] initWithTitle:@"Place Votes" style:UIBarButtonItemStylePlain target:self action:@selector(placeVotes:)];
+  self.navigationItem.rightBarButtonItem = voteButton;
   
   self.title = @"What's good?";
   
@@ -99,7 +124,7 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
   }
   
-  cell.textLabel.text = [self.venues objectAtIndex:indexPath.row];
+  cell.textLabel.text = [self.venues objectAtIndex:indexPath.row][@"name"];
   
   return cell;
 }

@@ -47,6 +47,7 @@
   for (NSIndexPath *indexPath in indexPaths) {
     NSLog(@"%@", [[self.users objectAtIndex:indexPath.row] username]);
   }
+  
   [self.navigationController popViewControllerAnimated:YES];
 }
 

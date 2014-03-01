@@ -6,8 +6,9 @@
 //  Copyright (c) 2014 whyte.tanner. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "SFEvent.h"
+#import "SFUser.h"
+#import <UIKit/UIKit.h>
 
 @interface SFMealInviteViewController : UIViewController
 
@@ -18,6 +19,6 @@
 - (IBAction)timeChooser:(UISegmentedControl *)sender;
 - (IBAction)acceptInviteButton:(UIButton *)sender;
 - (IBAction)rejectInviteButton:(UIButton *)sender;
-- (instancetype)initWithEvent:(SFEvent *)event;
+- (id) initWithUser:(SFUser *)user event:(SFEvent *)event;
 
 @end
