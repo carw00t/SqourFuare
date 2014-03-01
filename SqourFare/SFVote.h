@@ -20,8 +20,12 @@
 - (NSString *) userID;
 - (NSString *) eventID;
 - (NSString *) venueID;
+
+// TODO(jacob) parse returns NSNumber, but should really be an enum
 - (NSNumber *) voteType;
 
 + (instancetype) voteWithID:(NSString *)voteID;
++ (instancetype) newVoteWithUserID:(NSString *)userID eventID:(NSString *)eventID
+                           venueID:(NSString *)venueID voteType:(NSNumber *)voteType;
 
 @end

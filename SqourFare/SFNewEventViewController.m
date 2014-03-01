@@ -13,7 +13,7 @@
 @end
 
 @implementation SFNewEventViewController
-- (id)initWithUser: (SFUser *) user userFriends: (NSArray *) friends
+- (id)initWithUser:(SFUser *)user userFriends:(NSArray *)friends
 {
   if (self = [super initWithNibName:@"SFNewEventViewController" bundle:nil]) {
     self.loggedInUser = user;
@@ -26,8 +26,8 @@
 {
   [super viewDidLoad];
   
-  UIBarButtonItem *newReminderButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(inviteFriends:)];
-  self.navigationItem.rightBarButtonItem = newReminderButton;
+  UIBarButtonItem *inviteButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(inviteFriends:)];
+  self.navigationItem.rightBarButtonItem = inviteButton;
   
   self.title = @"New Event?";
   
