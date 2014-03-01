@@ -43,14 +43,22 @@
 -(void)inviteFriends:(id)sender
 {
   NSArray *indexPaths = [self.friendTableView indexPathsForSelectedRows];
-  NSLog(@"Time to invite...");
+  SFEvent *newEvent = [SFEvent createEventWithName:self.eventNameField.text date:self.datePicker.date host:self.loggedInUser.userID];
+  NSMutableArray *invitedUsers = [[NSMutableArray alloc] initWithObjects:self.loggedInUser.userID, nil];
+  [[self loggedInUser] inviteToEvent:newEvent.eventID];
   for (NSIndexPath *indexPath in indexPaths) {
-    NSLog(@"%@", [[self.users objectAtIndex:indexPath.row] username]);
+    SFUser *user = [self.users objectAtIndex:indexPath.row];
+    NSLog(@"%@", user.username);
+    [invitedUsers addObject: user.userID];
+    [user inviteToEvent:newEvent.eventID];
   }
+  [newEvent inviteUsers:invitedUsers];
+  
+  NSLog(@"Event name: %@, date: %@",self.eventNameField.text, self.datePicker.date);
+  NSLog(@"Users invited to the event: %@", newEvent.invited);
+
   [self.navigationController popViewControllerAnimated:YES];
 }
-
-#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -75,6 +83,11 @@
   cell.textLabel.text = user.username;
   
   return cell;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+{
+  [self.view endEditing:YES];
 }
 
 - (void)didReceiveMemoryWarning
