@@ -244,7 +244,32 @@ NSString * const SFWentEventName = @"Went Events";
 
 - (void) tallyVotes
 {
-  NSLog(@"This should eventually tally all votes for the event and set the venueID appropriately.");
+  PFQuery *voteQuery = [PFQuery queryWithClassName:@"Vote"];
+  [voteQuery whereKey:@"eventID" equalTo:self.eventID];
+  NSArray *votes = [voteQuery findObjects];
+  NSMutableDictionary *venueDict = [NSDictionary init];
+  __block int maxVotes = 0;
+  __block NSString *maxVenue = nil;
+  
+  [votes enumerateObjectsUsingBlock:^(PFObject *obj, NSUInteger idx, BOOL *stop) {
+    NSString *venueID = [obj objectForKey:@"venueID"];
+    NSNumber *voteCount = [venueDict objectForKey:venueID];
+    
+    if (voteCount == nil) {
+      voteCount = [NSNumber numberWithInt:1];
+    }
+    else {
+      voteCount = [NSNumber numberWithInt:([voteCount intValue] + 1)];
+    }
+    
+    [venueDict setObject:voteCount forKey:venueID];
+    if ([voteCount intValue] > maxVotes) {
+      maxVotes = [voteCount intValue];
+      maxVenue = venueID;
+    }
+  }];
+  
+  self.venueID = maxVenue;
 }
 
 + (NSString *)getEventNameFromType: (SFEventType) type

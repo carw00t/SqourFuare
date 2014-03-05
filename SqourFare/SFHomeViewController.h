@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SFEvent.h"
+#import "SFEventOverviewViewController.h"
 #import "SFHomeViewTableCell.h"
 #import "SFNewEventViewController.h"
 #import "SFMealInviteViewController.h"
