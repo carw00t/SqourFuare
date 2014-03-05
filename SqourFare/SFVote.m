@@ -17,9 +17,19 @@
 @property (nonatomic) NSNumber *voteType;
 @property (strong, nonatomic) PFObject *parseObj;
 
++ (PFQuery *) cachedQueryWithClassName:(NSString *)name;
+
 @end
 
 @implementation SFVote
+
++ (PFQuery *) cachedQueryWithClassName:(NSString *)name
+{
+  PFQuery *query = [PFQuery queryWithClassName:name];
+  query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+  
+  return query;
+}
 
 - (instancetype) initWithPFObject:(PFObject *)voteObj
 {
@@ -81,7 +91,7 @@
   
   [voteObj save];
   
-  PFQuery *dupCheck = [PFQuery queryWithClassName:@"Vote"];
+  PFQuery *dupCheck = [SFVote cachedQueryWithClassName:@"Vote"];
   [dupCheck whereKey:@"userID" equalTo:userID];
   [dupCheck whereKey:@"eventID" equalTo:eventID];
   [dupCheck whereKey:@"venueID" equalTo:venueID];
@@ -115,7 +125,7 @@
 + (void) deleteVotesForUserID: (NSString *)userID eventID: (NSString *)eventID
 {
   NSLog(@"Deleting votes for userID %@ eventID %@", userID, eventID);
-  PFQuery *query = [PFQuery queryWithClassName:@"Vote"];
+  PFQuery *query = [SFVote cachedQueryWithClassName:@"Vote"];
   [query whereKey:@"eventID" equalTo:eventID];
   [query whereKey:@"userID" equalTo:userID];
   [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

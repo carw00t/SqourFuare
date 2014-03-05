@@ -23,9 +23,19 @@
 @property (strong, nonatomic) NSArray *timeVotes;
 @property (strong, nonatomic) PFObject *parseObj;
 
++ (PFQuery *) cachedQueryWithClassName:(NSString *)name;
+
 @end
 
 @implementation SFEvent
+
++ (PFQuery *) cachedQueryWithClassName:(NSString *)name
+{
+  PFQuery *query = [PFQuery queryWithClassName:name];
+  query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+  
+  return query;
+}
 
 // init with a parse db object for convenience
 - (instancetype) initWithPFObject:(PFObject *)eventObj
@@ -101,7 +111,7 @@
   
   [eventObj save];
   
-  PFQuery *dupCheck = [PFQuery queryWithClassName:@"Event"];
+  PFQuery *dupCheck = [SFEvent cachedQueryWithClassName:@"Event"];
   [dupCheck whereKey:@"name" equalTo:name];
   [dupCheck whereKey:@"host" equalTo:hostID];
   [dupCheck whereKey:@"date" equalTo:date];
@@ -140,7 +150,7 @@
 
 + (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID
 {
-  PFQuery *findEvent = [PFQuery queryWithClassName:@"Event"];
+  PFQuery *findEvent = [SFEvent cachedQueryWithClassName:@"Event"];
   [findEvent whereKey:@"name" equalTo:name];
   [findEvent whereKey:@"host" equalTo:hostID];
   [findEvent whereKey:@"date" equalTo:date];
@@ -281,7 +291,7 @@
 {
   NSLog(@"Tally votes");
   
-  PFQuery *voteQuery = [PFQuery queryWithClassName:@"Vote"];
+  PFQuery *voteQuery = [SFEvent cachedQueryWithClassName:@"Vote"];
   [voteQuery whereKey:@"eventID" equalTo:self.eventID];
   NSArray *votes = [voteQuery findObjects];
   NSMutableDictionary *venueDict = [[NSMutableDictionary alloc] init];

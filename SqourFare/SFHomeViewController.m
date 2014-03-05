@@ -61,8 +61,7 @@ static NSString *invitedEventName = @"Invited Events";
 }
 
 - (void)refresh:(UIRefreshControl *)refreshControl {
-  // refresh the cache here vweert
-  
+  [PFQuery clearAllCachedResults];
   [self.homeTableView reloadData];
   [refreshControl endRefreshing];
 }
