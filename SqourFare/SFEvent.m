@@ -279,12 +279,14 @@
 
 - (void) tallyVotes
 {
+  NSLog(@"Tally votes");
+  
   PFQuery *voteQuery = [PFQuery queryWithClassName:@"Vote"];
   [voteQuery whereKey:@"eventID" equalTo:self.eventID];
   NSArray *votes = [voteQuery findObjects];
   NSMutableDictionary *venueDict = [[NSMutableDictionary alloc] init];
   __block int maxVotes = 0;
-  __block NSString *maxVenue = nil;
+  __block NSString *maxVenue = self.venueID;
   
   [votes enumerateObjectsUsingBlock:^(PFObject *obj, NSUInteger idx, BOOL *stop) {
     NSString *venueID = [obj objectForKey:@"venueID"];
@@ -303,9 +305,6 @@
       maxVenue = venueID;
     }
   }];
-  
-  self.venueID = maxVenue;
-  [self.parseObj setObject:maxVenue forKey:@"venueID"];
   
   NSMutableDictionary *timeDict = [[NSMutableDictionary alloc] init];
   maxVotes = 0;
@@ -328,11 +327,13 @@
     }
   }];
   
+  if (maxVenue == nil && [self.date compare:maxTime] == NSOrderedSame)
+    return;
+  
   self.venueID = maxVenue;
   self.date = maxTime;
   [self.parseObj setObject:maxVenue forKey:@"venueID"];
   [self.parseObj setObject:maxTime forKey:@"date"];
-  
   [self.parseObj saveInBackground];
 }
 

@@ -44,7 +44,13 @@ static NSString *invitedHeader = @"Also Invited";
   self.attendingTableView.dataSource = self;
   
   self.title = self.event.name;
-  self.venueLabel.text = self.event.venueID;
+  if (self.event.venueID == NULL) {
+    self.venueLabel.text = @"Nobody voted!";
+  }
+  else {
+    NSLog(@"venueID: %@", self.event.venueID);
+    self.venueLabel.text = self.event.venueID;
+  }
   self.dateLabel.text = [self.event.date description];
   
   [self.attendingTableView reloadData];
