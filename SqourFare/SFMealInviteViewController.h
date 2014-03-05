@@ -8,6 +8,7 @@
 
 #import "SFEvent.h"
 #import "SFUser.h"
+#import "SFVote.h"
 #import <UIKit/UIKit.h>
 
 @interface SFMealInviteViewController : UIViewController
@@ -17,7 +18,6 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *timeChooserOutlet;
 @property (strong, nonatomic) SFEvent *event;
 
-- (IBAction)timeChooser:(UISegmentedControl *)sender;
 - (IBAction)acceptInviteButton:(UIButton *)sender;
 - (IBAction)rejectInviteButton:(UIButton *)sender;
 - (id) initWithUser:(SFUser *)user event:(SFEvent *)event;

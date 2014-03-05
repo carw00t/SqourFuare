@@ -142,11 +142,17 @@ typedef enum SFInviteType {
   NSDate *selectedDate = [self.possibleEventTimes objectAtIndex:
                           self.timeChooserOutlet.selectedSegmentIndex];
   NSLog(@"%@", selectedDate);
-  // Cast votes for the location
-  /*[SFVote newVoteWithUserID:self.loggedInUser.userID eventID:self.event.eventID
-                    venueID:[self.venues objectAtIndex:indexPath.row][@"id"]
-                   voteType:[NSNumber numberWithInt:1]];
-   */
+  NSMutableArray *votes = [NSMutableArray array];
+  for (NSString *venueID in self.venueIDs) {
+    SFVote *vote = [SFVote newVoteWithUserID:self.loggedInUser.userID eventID:self.event.eventID venueID:venueID voteType:[NSNumber numberWithInt:1]];
+    if (vote != nil) {
+      [votes addObject:vote];
+    }
+  }
+  
+  [self.event addVotes:votes];
+  [self.event addTimeVote:[self.possibleEventTimes objectAtIndex: self.timeChooserOutlet.selectedSegmentIndex] userID:self.loggedInUser.userID];
+  [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)rejectInviteButton:(UIButton *)sender
