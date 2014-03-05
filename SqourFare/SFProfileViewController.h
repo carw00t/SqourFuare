@@ -13,6 +13,7 @@
 
 @property (strong, nonatomic) IBOutlet UITextField *friendUsernameField;
 @property (strong, nonatomic) IBOutlet UILabel *loggedInUserLabel;
+@property (strong, nonatomic) IBOutlet UILabel *addFriendStatus;
 
 - (IBAction)addFriend:(UIButton *)sender;
 - (id)initWithUser: (SFUser *)user;

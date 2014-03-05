@@ -18,6 +18,7 @@ typedef enum SFInviteType {
 
 @property (strong, nonatomic) SFUser *loggedInUser;
 @property (strong, nonatomic) NSArray *venueIDs;
+@property (strong, nonatomic) NSMutableArray *possibleEventTimes;
 
 @end
 
@@ -109,12 +110,16 @@ typedef enum SFInviteType {
   self.inviteeTableView.dataSource = self;
   self.inviteeTableView.delegate = self;
   
+  self.timeChooserOutlet.selectedSegmentIndex = 2;
+  
+  self.possibleEventTimes = [NSMutableArray array];
   NSInteger timeIncrement = 30;
   for (NSInteger i = -2; i < 3; i++) {
     NSDate *displayDate = [self.event.date dateByAddingTimeInterval:60*timeIncrement*i];
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"hh:mm"];
     NSString *stringFromDate = [dateFormatter stringFromDate:displayDate];
+    [self.possibleEventTimes addObject:displayDate];
     [self.timeChooserOutlet setTitle:stringFromDate forSegmentAtIndex:i + 2];
   }
 }
@@ -132,13 +137,11 @@ typedef enum SFInviteType {
   // Dispose of any resources that can be recreated.
 }
 
-- (IBAction)timeChooser:(UISegmentedControl *)sender
-{
-  NSLog(@"selected segments: %ld", (long)[sender selectedSegmentIndex]);
-}
-
 - (IBAction)acceptInviteButton:(UIButton *)sender
 {
+  NSDate *selectedDate = [self.possibleEventTimes objectAtIndex:
+                          self.timeChooserOutlet.selectedSegmentIndex];
+  NSLog(@"%@", selectedDate);
   // Cast votes for the location
   /*[SFVote newVoteWithUserID:self.loggedInUser.userID eventID:self.event.eventID
                     venueID:[self.venues objectAtIndex:indexPath.row][@"id"]

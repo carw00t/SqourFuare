@@ -10,9 +10,11 @@
 
 @interface SFNewEventViewController () <UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) NSArray *users;
+@property (strong, nonatomic) NSString *initialEventNameText;
 @end
 
 @implementation SFNewEventViewController
+
 - (id)initWithUser:(SFUser *)user userFriends:(NSArray *)friends
 {
   if (self = [super initWithNibName:@"SFNewEventViewController" bundle:nil]) {
@@ -33,6 +35,8 @@
   
   self.friendTableView.delegate = self;
   self.friendTableView.dataSource = self;
+  
+  self.initialEventNameText = self.eventNameField.text;
   // Uncomment the following line to preserve selection between presentations.
   // self.clearsSelectionOnViewWillAppear = NO;
   

@@ -48,9 +48,12 @@
   if (userToFriend != nil) {
     [self.loggedInUser addFriend:userToFriend.userID];
     [userToFriend addFriend:self.loggedInUser.userID];
-    self.friendUsernameField.text = @"";
+    [self.addFriendStatus setTextColor:[UIColor greenColor]];
+    self.addFriendStatus.text = [NSString stringWithFormat:@"User %@ is your friend!", self.friendUsernameField.text];
   } else {
-    NSLog(@"User %@ does not exist", self.friendUsernameField.text);
+    [self.addFriendStatus setTextColor:[UIColor redColor]];
+    self.addFriendStatus.text = [NSString stringWithFormat:@"User %@ does not exist.", self.friendUsernameField.text];
   }
+  self.friendUsernameField.text = @"";
 }
 @end
