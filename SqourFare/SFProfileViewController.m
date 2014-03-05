@@ -45,7 +45,12 @@
 
 - (IBAction)addFriend:(UIButton *)sender {
   SFUser *userToFriend = [SFUser userWithUsername:self.friendUsernameField.text];
-  [self.loggedInUser addFriend:userToFriend.userID];
-  
+  if (userToFriend != nil) {
+    [self.loggedInUser addFriend:userToFriend.userID];
+    [userToFriend addFriend:self.loggedInUser.userID];
+    self.friendUsernameField.text = @"";
+  } else {
+    NSLog(@"User %@ does not exist", self.friendUsernameField.text);
+  }
 }
 @end
