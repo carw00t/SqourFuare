@@ -32,10 +32,9 @@
 
 - (void)viewDidLoad
 {
-    [super viewDidLoad];
-  // WTF WHY THIS NO WORK?
-  //NSString *username = self.loggedInUser.username;
-  //self.loggedInUserLabel.text = username;
+  [super viewDidLoad];
+  NSString *username = self.loggedInUser.username;
+  self.loggedInUserLabel.text = username;
 }
 
 - (void)didReceiveMemoryWarning
