@@ -20,13 +20,12 @@
 - (void) addFriend:(NSString *)userID;
 - (void) addFriends:(NSArray *)userIDs;
 - (void) confirmEvent:(NSString *)eventID;
+- (NSArray *) getFriendsAsObjects;
 - (void) inviteToEvent:(NSString *)eventID;
 - (void) rejectEvent:(NSString *)eventID;
 - (void) removeFriend:(NSString *)userID;
 - (void) removeFriends:(NSArray *)userIDs;
 - (void) unconfirmEvent:(NSString *)eventID;
-- (NSArray *) getEventsOfType:(SFEventType) type;
-- (NSArray *) getFriends;
 
 - (NSString *) userID;
 - (NSString *) username;

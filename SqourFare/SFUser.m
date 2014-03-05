@@ -170,6 +170,14 @@
   }
 }
 
+- (NSArray *) getFriendsAsObjects
+{
+  PFQuery *friendQuery = [PFQuery queryWithClassName:@"User"];
+  [friendQuery whereKey:@"objectId" containedIn:self.friends];
+  
+  return [friendQuery findObjects];
+}
+
 - (void) inviteToEvent:(NSString *)eventID
 {
   if (![self.inviteIDs containsObject:eventID]) {
@@ -236,35 +244,6 @@
     [self.parseObj addObject:eventID forKey:@"invites"];
     [self.parseObj saveInBackground];
   }
-}
-
-- (NSArray *) getEventsOfType:(SFEventType) type
-{
-  NSArray *eventIDs;
-  switch (type) {
-    case SFGoingEvent:
-      eventIDs = self.confirmedEventIDs;
-      break;
-    case SFInvitedEvent:
-      eventIDs = self.inviteIDs;
-      break;
-    default:
-      break;
-  }
-  NSMutableArray *events =  [NSMutableArray array];
-  for (NSString *eventID in eventIDs) {
-    [events addObject:[SFEvent eventWithID:eventID]];
-  }
-  return events;
-}
-
-- (NSArray *) getFriends
-{
-  NSMutableArray *friends = [NSMutableArray array];
-  for (NSString *friendID in self.friends) {
-    [friends addObject:[SFUser userWithID:friendID]];
-  }
-  return friends;
 }
 
 @end
