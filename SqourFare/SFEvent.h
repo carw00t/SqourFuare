@@ -9,16 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <Parse/Parse.h>
 
-extern NSString * const SFGoingEventName;
-extern NSString * const SFInvitedEventName;
-extern NSString * const SFWentEventName;
-
-typedef enum SFEventType {
-  SFGoingEvent,         //0
-  SFInvitedEvent,       //1
-  SFNumberOfEventsTypes //This will get set to be the number of events
-} SFEventType;
-
 @interface SFEvent : NSObject
 
 - (instancetype) initWithPFObject:(PFObject *)eventObj;
@@ -55,7 +45,6 @@ typedef enum SFEventType {
 + (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
 // TODO(jacob) this should be an initializer
 + (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
-+ (NSString *)getEventNameFromType: (SFEventType) type;
 
 
 @end

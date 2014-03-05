@@ -8,6 +8,11 @@
 
 #import "SFHomeViewController.h"
 
+static const NSInteger confirmedSection = 0;
+static const NSInteger invitedSection = 1;
+static NSString *goingEventName = @"Going Events";
+static NSString *invitedEventName = @"Invited Events";
+
 @interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) NSMutableArray *userFriends;
 @end
@@ -16,12 +21,8 @@
 - (void) userLoggedIn:(SFUser *)user
 {
   self.loggedInUser = user;
-  self.userFriends = [NSMutableArray arrayWithArray:user.friends];
-  [self.userFriends enumerateObjectsUsingBlock:^(NSString *friendID, NSUInteger idx, BOOL *stop) {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-      [self.userFriends replaceObjectAtIndex:idx withObject:[SFUser userWithID:friendID]];
-    });
-  }];
+  self.userFriends = [NSMutableArray arrayWithArray:[self.loggedInUser getFriendsAsObjects]];
+  
   [self.navigationController popToRootViewControllerAnimated:YES];
   [self.navigationController setNavigationBarHidden:NO animated:NO];
   NSLog(@"User %@ logged in", user.username);
@@ -102,8 +103,21 @@
   if (!cell) {
     cell = [[SFHomeViewTableCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"HomeCell"];
   }
-  NSArray *events = [self.loggedInUser getEventsOfType:indexPath.section];
-  SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
+  
+  SFEvent *event = nil;
+  
+  switch (indexPath.section) {
+    case confirmedSection:
+      event = [SFEvent eventWithID:[self.loggedInUser.confirmedEventIDs objectAtIndex:indexPath.row]];
+      break;
+      
+    case invitedSection:
+      event = [SFEvent eventWithID:[self.loggedInUser.inviteIDs objectAtIndex:indexPath.row]];
+      break;
+      
+    default:
+      break;
+  }
   
   // Get the dates to display
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
@@ -120,25 +134,65 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  return [[self.loggedInUser getEventsOfType:section] count];
+  switch (section) {
+    case confirmedSection:
+      return [self.loggedInUser.confirmedEventIDs count];
+      break;
+      
+    case invitedSection:
+      return [self.loggedInUser.inviteIDs count];
+      break;
+      
+    default:
+      return -1;
+      break;
+  }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  return SFNumberOfEventsTypes;
+  return 2;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-  return [SFEvent getEventNameFromType:section];
+  switch (section) {
+    case confirmedSection:
+      return goingEventName;
+      break;
+      
+    case invitedSection:
+      return invitedEventName;
+      break;
+      
+    default:
+      return nil;
+      break;
+  }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  NSArray *events = [self.loggedInUser getEventsOfType:indexPath.section];
-  SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
-  NSLog(@"Selected event: %@", event.name);
+  SFEvent *event = nil;
   
+  // TODO(jacob) this could not be the expected event if for example the user has received
+  // an invite to an event after the table was loaded. one way to fix this would be to
+  // store the eventIDs as a private field
+  switch (indexPath.section) {
+    case confirmedSection:
+      event = [SFEvent eventWithID:[self.loggedInUser.confirmedEventIDs objectAtIndex:indexPath.row]];
+      break;
+      
+    case invitedSection:
+      event = [SFEvent eventWithID:[self.loggedInUser.inviteIDs objectAtIndex:indexPath.row]];
+      break;
+      
+    default:
+      break;
+  }
+
+  NSLog(@"Selected event: %@", event.name);
+
   // check if event is less than 30 minutes from now
   if ([event.date timeIntervalSinceNow] < 30*60) {
     SFEventOverviewViewController *eventOverview = [[SFEventOverviewViewController alloc] initWithEvent:event];

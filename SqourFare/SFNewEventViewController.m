@@ -82,7 +82,8 @@
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
   }
   
-  SFUser *user = [[self.loggedInUser getFriends] objectAtIndex:indexPath.row];
+  NSString *userID = [self.loggedInUser.friends objectAtIndex:indexPath.row];
+  SFUser *user = [SFUser userWithID:userID];
   cell.textLabel.text = user.username;
   
   return cell;

@@ -9,8 +9,10 @@
 #import "SFEventOverviewViewController.h"
 #import "SFUser.h"
 
-static NSInteger confirmedSection = 0;
-static NSInteger invitedSection = 1;
+static const NSInteger confirmedSection = 0;
+static const NSInteger invitedSection = 1;
+static NSString *confirmedHeader = @"Confirmed";
+static NSString *invitedHeader = @"Also Invited";
 
 @interface SFEventOverviewViewController () <UITableViewDelegate, UITableViewDataSource>
 
@@ -69,12 +71,19 @@ static NSInteger invitedSection = 1;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-  if (section == confirmedSection)
-    return [self.event.confirmedMembers count];
-  else if (section == invitedSection)
-    return [self.event.invited count];
-  else
-    return -1;
+  switch (section) {
+    case confirmedSection:
+      return [self.event.confirmedMembers count];
+      break;
+      
+    case invitedSection:
+      return [self.event.invited count];
+      break;
+      
+    default:
+      return -1;
+      break;
+  }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -97,12 +106,19 @@ static NSInteger invitedSection = 1;
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-  if (section == confirmedSection)
-    return @"Confirmed";
-  else if (section == invitedSection)
-    return @"Also Invited";
-  else
-    return nil;
+  switch (section) {
+    case confirmedSection:
+      return confirmedHeader;
+      break;
+      
+    case invitedSection:
+      return invitedHeader;
+      break;
+      
+    default:
+      return nil;
+      break;
+  }
 }
 
 @end
