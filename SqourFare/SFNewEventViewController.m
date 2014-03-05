@@ -52,7 +52,6 @@
   [[self loggedInUser] inviteToEvent:newEvent.eventID];
   for (NSIndexPath *indexPath in indexPaths) {
     SFUser *user = [self.users objectAtIndex:indexPath.row];
-    NSLog(@"%@", user.username);
     [invitedUsers addObject: user.userID];
     [user inviteToEvent:newEvent.eventID];
   }
