@@ -14,6 +14,7 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;
 @property (strong, nonatomic) IBOutlet UITableView *inviteeTableView;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *timeChooserOutlet;
 @property (strong, nonatomic) SFEvent *event;
 
 - (IBAction)timeChooser:(UISegmentedControl *)sender;

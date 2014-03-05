@@ -108,6 +108,15 @@ typedef enum SFInviteType {
   
   self.inviteeTableView.dataSource = self;
   self.inviteeTableView.delegate = self;
+  
+  NSInteger timeIncrement = 30;
+  for (NSInteger i = -2; i < 3; i++) {
+    NSDate *displayDate = [self.event.date dateByAddingTimeInterval:60*timeIncrement*i];
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"hh:mm"];
+    NSString *stringFromDate = [dateFormatter stringFromDate:displayDate];
+    [self.timeChooserOutlet setTitle:stringFromDate forSegmentAtIndex:i + 2];
+  }
 }
 
 -(void)voteForVenues:(id)sender

@@ -95,17 +95,15 @@
   SFEvent *event = [events objectAtIndex:(NSUInteger) indexPath.row];
   
   // Get the dates to display
-  NSDateComponents *currComponents = [[NSCalendar currentCalendar] components:NSCalendarUnitDay fromDate:[NSDate date]];
-  NSInteger currDay = [currComponents day];
-  
-  NSDateComponents *components = [[NSCalendar currentCalendar] components:NSCalendarUnitDay | NSCalendarUnitHour | NSCalendarUnitMinute fromDate:[event date]];
-  NSInteger eventDay = [components day];
-  NSInteger eventHour = [components hour];
-  NSInteger eventMinute = [components minute];
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  [dateFormatter setDateFormat:@"hh:mm"];
+  NSString *eventTime = [dateFormatter stringFromDate:event.date];
+  [dateFormatter setDateFormat:@"EEE"];
+  NSString *eventDay = [dateFormatter stringFromDate:event.date];
   
   cell.restaurantNameLabel.text = event.name;
-  cell.dayLabel.text = [NSString stringWithFormat:@"%d", (eventDay - currDay)];
-  cell.timeLabel.text = [NSString stringWithFormat:@"%d:%d", (int)eventHour, (int)eventMinute];
+  cell.dayLabel.text = eventDay;
+  cell.timeLabel.text = eventTime;
   return cell;
 }
 
