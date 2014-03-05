@@ -184,8 +184,14 @@
 {
   PFQuery *friendQuery = [SFUser cachedQueryWithClassName:@"User"];
   [friendQuery whereKey:@"objectId" containedIn:self.friends];
+  NSArray *friendPFObjects = [friendQuery findObjects];
   
-  return [friendQuery findObjects];
+  NSMutableArray *friendUsers = [NSMutableArray arrayWithCapacity:[friendPFObjects count]];
+  [friendPFObjects enumerateObjectsUsingBlock:^(PFObject *obj, NSUInteger idx, BOOL *stop) {
+    friendUsers[idx] = [[SFUser alloc] initWithPFObject:obj];
+  }];
+  
+  return friendUsers;
 }
 
 - (void) inviteToEvent:(NSString *)eventID
