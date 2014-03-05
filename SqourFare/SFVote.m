@@ -112,4 +112,23 @@
   }
 }
 
++ (void) deleteVotesForUserID: (NSString *)userID eventID: (NSString *)eventID
+{
+  NSLog(@"Deleting votes for userID %@ eventID %@", userID, eventID);
+  PFQuery *query = [PFQuery queryWithClassName:@"Vote"];
+  [query whereKey:@"eventID" equalTo:eventID];
+  [query whereKey:@"userID" equalTo:userID];
+  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      for (PFObject *object in objects) {
+        NSLog(@"deleting vote");
+        [object deleteInBackground];
+      }
+    } else {
+      // Log details of the failure
+      NSLog(@"Error: Could not deleteVotesForEventID. %@ %@", error, [error userInfo]);
+    }
+  }];
+}
+
 @end

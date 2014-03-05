@@ -152,11 +152,18 @@ typedef enum SFInviteType {
   
   [self.event addVotes:votes];
   [self.event addTimeVote:[self.possibleEventTimes objectAtIndex: self.timeChooserOutlet.selectedSegmentIndex] userID:self.loggedInUser.userID];
+  [self.event confirmMember:self.loggedInUser.userID];
+  [self.loggedInUser confirmEvent:self.event.eventID];
+  
   [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)rejectInviteButton:(UIButton *)sender
 {
+  [self.event removeUser:self.loggedInUser.userID];
+  [self.loggedInUser rejectEvent:self.event.eventID];
+  [SFVote deleteVotesForUserID:self.loggedInUser.userID eventID:self.event.eventID];
+  
   [self.navigationController popViewControllerAnimated:YES];
 }
 

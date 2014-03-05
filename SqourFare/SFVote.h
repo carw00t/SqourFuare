@@ -27,5 +27,6 @@
 + (instancetype) voteWithID:(NSString *)voteID;
 + (instancetype) newVoteWithUserID:(NSString *)userID eventID:(NSString *)eventID
                            venueID:(NSString *)venueID voteType:(NSNumber *)voteType;
++ (void) deleteVotesForUserID: (NSString *)userID eventID: (NSString *)eventID;
 
 @end
