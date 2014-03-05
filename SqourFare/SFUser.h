@@ -21,6 +21,7 @@
 - (void) addFriends:(NSArray *)userIDs;
 - (void) confirmEvent:(NSString *)eventID;
 - (void) inviteToEvent:(NSString *)eventID;
+- (void) rejectEvent:(NSString *)eventID;
 - (void) removeFriend:(NSString *)userID;
 - (void) removeFriends:(NSArray *)userIDs;
 - (void) unconfirmEvent:(NSString *)eventID;

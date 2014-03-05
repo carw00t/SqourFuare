@@ -172,7 +172,13 @@ NSString * const SFWentEventName = @"Went Events";
 
 - (void) addVotes:(NSArray *)voteIDs {
   // conceptually efficient, if not practically so
-  NSArray *updatedVotes = [[NSSet setWithArray:[self.votes arrayByAddingObjectsFromArray:voteIDs]] allObjects];
+  NSLog(@"voteIDs: %@", voteIDs);
+  NSArray *allVotes = [self.votes arrayByAddingObjectsFromArray:voteIDs];
+  NSLog(@"allVotes: %@", allVotes);
+  NSSet *allSet = [NSSet setWithArray:allVotes];
+  NSLog(@"allSet: %@", allSet);
+  NSArray *updatedVotes = [allSet allObjects];
+  NSLog(@"updatedVotes: %@", updatedVotes);
   
   if ([updatedVotes count] != [self.votes count]) {
     self.votes = updatedVotes;
@@ -244,6 +250,26 @@ NSString * const SFWentEventName = @"Went Events";
     [self.parseObj setObject:updatedVenues forKey:@"proposedVenues"];
     [self.parseObj saveInBackground];
   }
+}
+
+- (void) removeUser:(NSString *)userID
+{
+  if ([self.invited containsObject:userID]) {
+    NSMutableArray *muteInvited = [NSMutableArray arrayWithArray:self.invited];
+    [muteInvited removeObject:userID];
+    self.invited = [NSArray arrayWithArray:muteInvited];
+    
+    [self.parseObj removeObject:userID forKey:@"invited"];
+  }
+  else if ([self.confirmedMembers containsObject:userID]) {
+    NSMutableArray *muteConfirmed = [NSMutableArray arrayWithArray:self.confirmedMembers];
+    [muteConfirmed removeObject:userID];
+    self.confirmedMembers = [NSArray arrayWithArray:muteConfirmed];
+    
+    [self.parseObj removeObject:userID forKey:@"confirmedMembers"];
+  }
+  
+  [self.parseObj saveInBackground];
 }
 
 - (void) setVenue:(NSString *)venueID
