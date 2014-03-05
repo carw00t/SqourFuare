@@ -146,7 +146,7 @@ typedef enum SFInviteType {
   for (NSString *venueID in self.venueIDs) {
     SFVote *vote = [SFVote newVoteWithUserID:self.loggedInUser.userID eventID:self.event.eventID venueID:venueID voteType:[NSNumber numberWithInt:1]];
     if (vote != nil) {
-      [votes addObject:vote];
+      [votes addObject:vote.voteID];
     }
   }
   

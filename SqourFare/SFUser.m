@@ -179,6 +179,26 @@
   }
 }
 
+- (void) rejectEvent:(NSString *)eventID
+{
+  if ([self.inviteIDs containsObject:eventID]) {
+    NSMutableArray *muteInvites = [NSMutableArray arrayWithArray:self.inviteIDs];
+    [muteInvites removeObject:eventID];
+    self.inviteIDs = [NSArray arrayWithArray:muteInvites];
+    
+    [self.parseObj removeObject:eventID forKey:@"invites"];
+  }
+  else if ([self.confirmedEventIDs containsObject:eventID]) {
+    NSMutableArray *muteConfirms = [NSMutableArray arrayWithArray:self.confirmedEventIDs];
+    [muteConfirms removeObject:eventID];
+    self.confirmedEventIDs = [NSArray arrayWithArray:muteConfirms];
+    
+    [self.parseObj removeObject:eventID forKey:@"confirmedEvents"];
+  }
+  
+  [self.parseObj saveInBackground];
+}
+
 - (void) removeFriend:(NSString *)userID
 {
   if ([self.friends containsObject:userID]) {

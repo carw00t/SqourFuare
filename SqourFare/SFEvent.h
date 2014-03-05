@@ -36,6 +36,7 @@ typedef enum SFEventType {
 - (void) inviteUsers:(NSArray *)userIDs;
 - (void) proposeVenue:(NSString *)venueID;
 - (void) proposeVenues:(NSArray *)venueIDs;
+- (void) removeUser:(NSString *)userID;
 - (void) setVenue:(NSString *)venueID;
 - (void) tallyVotes;
 
