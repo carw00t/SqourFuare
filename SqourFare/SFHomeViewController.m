@@ -129,13 +129,14 @@
   NSLog(@"Selected event: %@", event.name);
   
   // check if event is less than 30 minutes from now
-  if ([event.date timeIntervalSinceNow] > -30*60) {
+  if ([event.date timeIntervalSinceNow] < 30*60) {
     SFEventOverviewViewController *eventOverview = [[SFEventOverviewViewController alloc] initWithEvent:event];
     [self.navigationController pushViewController:eventOverview animated:YES];
   }
-  
-  SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithUser:self.loggedInUser event:event];
-  [self.navigationController pushViewController:mealVC animated:YES];
+  else {
+    SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithUser:self.loggedInUser event:event];
+    [self.navigationController pushViewController:mealVC animated:YES];
+  }
 }
 
 @end

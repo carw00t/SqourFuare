@@ -2,7 +2,7 @@
 //  SFNewEventViewController.m
 //  SqourFare
 //
-//  Created by Tanner Whyte on 2/27/14.
+//  Created by Jacob Van De Weert on 3/5/14.
 //  Copyright (c) 2014 whyte.tanner. All rights reserved.
 //
 
@@ -59,7 +59,7 @@
   [newEvent inviteUsers:invitedUsers];
   
   NSLog(@"Users invited to the event: %@", newEvent.invited);
-
+  
   [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -95,8 +95,8 @@
 
 - (void)didReceiveMemoryWarning
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+  [super didReceiveMemoryWarning];
+  // Dispose of any resources that can be recreated.
 }
 
 @end

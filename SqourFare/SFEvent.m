@@ -247,7 +247,7 @@ NSString * const SFWentEventName = @"Went Events";
   PFQuery *voteQuery = [PFQuery queryWithClassName:@"Vote"];
   [voteQuery whereKey:@"eventID" equalTo:self.eventID];
   NSArray *votes = [voteQuery findObjects];
-  NSMutableDictionary *venueDict = [NSDictionary init];
+  NSMutableDictionary *venueDict = [[NSMutableDictionary alloc] init];
   __block int maxVotes = 0;
   __block NSString *maxVenue = nil;
   
@@ -270,6 +270,8 @@ NSString * const SFWentEventName = @"Went Events";
   }];
   
   self.venueID = maxVenue;
+  [self.parseObj setObject:maxVenue forKey:@"venueID"];
+  [self.parseObj saveInBackground];
 }
 
 + (NSString *)getEventNameFromType: (SFEventType) type
