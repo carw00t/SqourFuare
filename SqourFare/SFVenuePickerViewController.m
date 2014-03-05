@@ -69,15 +69,14 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 - (void) placeVotes:(id)sender
 {
   NSArray *indexPaths = [self.venueTable indexPathsForSelectedRows];
+  NSMutableArray *venueIDs = [NSMutableArray array];
   
   NSLog(@"Recording votes...");
   for (NSIndexPath *indexPath in indexPaths) {
+    [venueIDs addObject:[self.venues objectAtIndex:indexPath.row][@"id"]];
     NSLog(@"%@", [self.venues objectAtIndex:indexPath.row][@"name"]);
-    [SFVote newVoteWithUserID:self.loggedInUser.userID eventID:self.event.eventID
-                      venueID:[self.venues objectAtIndex:indexPath.row][@"id"]
-                     voteType:[NSNumber numberWithInt:1]];
   }
-  
+  [self.venuePickDelegate userSelectedVenues: venueIDs];
   [self.navigationController popViewControllerAnimated:YES];
 }
 

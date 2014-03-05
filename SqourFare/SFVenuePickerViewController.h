@@ -9,10 +9,15 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
+@protocol SFVenuePickResponder <NSObject>
+- (void)userSelectedVenues: (NSArray *)venueIDs;
+@end
+
 @interface SFVenuePickerViewController : UITableViewController
 
 @property (strong, nonatomic) IBOutlet MKMapView *mapView;
 @property (strong, nonatomic) IBOutlet UITableView *venueTable;
+@property (strong, nonatomic) id<SFVenuePickResponder> venuePickDelegate;
 
 - (id)initWithUser:(SFUser *)user event:(SFEvent *)event;
 
