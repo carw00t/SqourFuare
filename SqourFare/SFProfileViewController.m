@@ -47,6 +47,6 @@
 - (IBAction)addFriend:(UIButton *)sender {
   SFUser *userToFriend = [SFUser userWithUsername:self.friendUsernameField.text];
   [self.loggedInUser addFriend:userToFriend.userID];
-  
+  [userToFriend addFriend:self.loggedInUser.userID];
 }
 @end
