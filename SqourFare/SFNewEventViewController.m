@@ -54,7 +54,6 @@
   }
   [newEvent inviteUsers:invitedUsers];
   
-  NSLog(@"Event name: %@, date: %@",self.eventNameField.text, self.datePicker.date);
   NSLog(@"Users invited to the event: %@", newEvent.invited);
 
   [self.navigationController popViewControllerAnimated:YES];
