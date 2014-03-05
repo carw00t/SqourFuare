@@ -115,6 +115,15 @@
   return [[SFUser alloc] initWithPFObject:userObj];
 }
 
++ (instancetype) userWithUsername:(NSString *)username
+{
+  PFQuery *findUser = [PFQuery queryWithClassName:@"User"];
+  [findUser whereKey:@"username" equalTo:username];
+  
+  PFObject *userObj = [findUser getFirstObject];
+  return [[SFUser alloc] initWithPFObject:userObj];
+}
+
 + (instancetype) userWithUsername:(NSString *)username password:(NSString *)password
 {
   PFQuery *findUser = [PFQuery queryWithClassName:@"User"];

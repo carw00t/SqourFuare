@@ -13,14 +13,6 @@
 @end
 
 @implementation SFHomeViewController
-/*- (id)initWithDataSource: (SFDataSource*) dataSource
-{
-  if (self = [super initWithNibName:@"SFHomeViewController" bundle:nil]) {
-    self.dataSource = dataSource;
-  }
-  return self;
-}*/
-
 - (void) userLoggedIn:(SFUser *)user
 {
   self.loggedInUser = user;
@@ -57,6 +49,9 @@
   UIBarButtonItem *newMealButton = [[UIBarButtonItem alloc] initWithTitle:@"New Meal" style:UIBarButtonItemStylePlain target:self action:@selector(newMeal:)];
   self.navigationItem.rightBarButtonItem = newMealButton;
   
+  UIBarButtonItem *profileButton = [[UIBarButtonItem alloc] initWithTitle:@"You" style:UIBarButtonItemStylePlain target:self action:@selector(viewProfile:)];
+  self.navigationItem.leftBarButtonItem = profileButton;
+  
   [self.homeTableView registerNib:[UINib nibWithNibName:@"SFHomeViewTableCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"HomeCell"];
 }
 
@@ -65,6 +60,12 @@
   [super viewWillAppear:animated];
   
   [self.homeTableView reloadData];
+}
+
+-(void)viewProfile:(id)sender
+{
+  SFProfileViewController *vc = [[SFProfileViewController alloc] initWithUser:self.loggedInUser];
+  [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)newMeal:(id)sender
@@ -103,7 +104,7 @@
   NSInteger eventMinute = [components minute];
   
   cell.restaurantNameLabel.text = event.name;
-  cell.dayLabel.text = [NSString stringWithFormat:@"+%d", (eventDay - currDay)];
+  cell.dayLabel.text = [NSString stringWithFormat:@"%d", (eventDay - currDay)];
   cell.timeLabel.text = [NSString stringWithFormat:@"%d:%d", (int)eventHour, (int)eventMinute];
   return cell;
 }
