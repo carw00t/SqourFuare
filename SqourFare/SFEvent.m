@@ -24,6 +24,7 @@ NSString * const SFWentEventName = @"Went Events";
 @property (strong, nonatomic) NSArray *invited;
 @property (strong, nonatomic) NSArray *confirmedMembers;
 @property (strong, nonatomic) NSArray *votes;
+@property (strong, nonatomic) NSArray *timeVotes;
 @property (strong, nonatomic) PFObject *parseObj;
 
 @end
@@ -47,6 +48,7 @@ NSString * const SFWentEventName = @"Went Events";
     self.invited = eventObj[@"invited"];
     self.confirmedMembers = eventObj[@"confirmedMembers"];
     self.votes = eventObj[@"votes"];
+    self.timeVotes = eventObj[@"timeVotes"];
     self.parseObj = eventObj;
   }
   
@@ -57,7 +59,7 @@ NSString * const SFWentEventName = @"Went Events";
                             host:(NSString *)hostID date:(NSDate*)date
                            venue:(NSString *)venueID proposedVenues:(NSArray *)proposed
                     invitedUsers:(NSArray *)invited confirmedMembers:(NSArray *)confirmed
-                           votes:(NSArray *)votes
+                           votes:(NSArray *)votes timeVotes:(NSArray *)timeVotes
 {
   if (self = [super init]) {
     self.eventID = eventID;
@@ -69,6 +71,7 @@ NSString * const SFWentEventName = @"Went Events";
     self.invited = invited;
     self.confirmedMembers = confirmed;
     self.votes = votes;
+    self.timeVotes = timeVotes;
     
     self.parseObj = [PFObject objectWithClassName:@"Event"];
     self.parseObj.objectId = eventID;
@@ -80,6 +83,7 @@ NSString * const SFWentEventName = @"Went Events";
     [self.parseObj setObject:invited forKey:@"invited"];
     [self.parseObj setObject:confirmed forKey:@"confirmedMembers"];
     [self.parseObj setObject:votes forKey:@"votes"];
+    [self.parseObj setObject:timeVotes forKey:@"timeVotes"];
     
     [self.parseObj saveInBackground];
   }
@@ -97,6 +101,7 @@ NSString * const SFWentEventName = @"Went Events";
   [eventObj setObject:[NSArray array] forKey:@"invited"];
   [eventObj setObject:[NSArray array] forKey:@"confirmedMembers"];
   [eventObj setObject:[NSArray array] forKey:@"votes"];
+  [eventObj setObject:[NSArray array] forKey:@"timeVotes"];
   
   [eventObj save];
   
@@ -146,6 +151,14 @@ NSString * const SFWentEventName = @"Went Events";
   
   PFObject *eventObj = [findEvent getFirstObject];
   return [[SFEvent alloc] initWithPFObject:eventObj];
+}
+
+- (void) addTimeVote:(NSDate *)time userID:(NSString *)userID
+{
+  // TODO(jacob) this currently allows users to vote multiple times... fix
+  self.timeVotes = [self.timeVotes arrayByAddingObject:time];
+  [self.parseObj addObject:time forKey:@"timeVotes"];
+  [self.parseObj saveInBackground];
 }
 
 - (void) addVote:(NSString *)voteID
@@ -271,6 +284,33 @@ NSString * const SFWentEventName = @"Went Events";
   
   self.venueID = maxVenue;
   [self.parseObj setObject:maxVenue forKey:@"venueID"];
+  
+  NSMutableDictionary *timeDict = [[NSMutableDictionary alloc] init];
+  maxVotes = 0;
+  __block NSDate *maxTime = self.date;  // start with default
+  
+  [self.timeVotes enumerateObjectsUsingBlock:^(NSDate *time, NSUInteger idx, BOOL *stop) {
+    NSNumber *voteCount = [timeDict objectForKey:time];
+    
+    if (voteCount == nil) {
+      voteCount = [NSNumber numberWithInt:1];
+    }
+    else {
+      voteCount = [NSNumber numberWithInt:([voteCount intValue] + 1)];
+    }
+    
+    [venueDict setObject:voteCount forKey:time];
+    if ([voteCount intValue] > maxVotes) {
+      maxVotes = [voteCount intValue];
+      maxTime = time;
+    }
+  }];
+  
+  self.venueID = maxVenue;
+  self.date = maxTime;
+  [self.parseObj setObject:maxVenue forKey:@"venueID"];
+  [self.parseObj setObject:maxTime forKey:@"date"];
+  
   [self.parseObj saveInBackground];
 }
 

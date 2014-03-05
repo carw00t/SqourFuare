@@ -26,7 +26,7 @@ typedef enum SFEventType {
                             host:(NSString *)hostID date:(NSDate*)date
                            venue:(NSString *)venueID proposedVenues:(NSArray *)proposed
                     invitedUsers:(NSArray *)invited confirmedMembers:(NSArray *)confirmed
-                           votes:(NSArray *)votes;
+                           votes:(NSArray *)votes timeVotes:(NSArray *)timeVotes;
 
 - (void) addVote:(NSString *)voteID;
 - (void) addVotes:(NSArray *)voteIDs;
@@ -47,6 +47,7 @@ typedef enum SFEventType {
 - (NSArray *) invited;
 - (NSArray *) confirmedMembers;
 - (NSArray *) votes;
+- (NSArray *) timeVotes;
 
 + (instancetype) eventWithID:(NSString *)eventID;
 + (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
