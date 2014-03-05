@@ -53,6 +53,17 @@
   self.navigationItem.leftBarButtonItem = profileButton;
   
   [self.homeTableView registerNib:[UINib nibWithNibName:@"SFHomeViewTableCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@"HomeCell"];
+  
+  UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+  [refreshControl addTarget:self action:@selector(refresh:) forControlEvents:UIControlEventValueChanged];
+  [self.homeTableView addSubview:refreshControl];
+}
+
+- (void)refresh:(UIRefreshControl *)refreshControl {
+  // refresh the cache here vweert
+  
+  [self.homeTableView reloadData];
+  [refreshControl endRefreshing];
 }
 
 - (void)viewWillAppear:(BOOL)animated
