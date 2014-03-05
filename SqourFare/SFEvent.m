@@ -23,9 +23,19 @@
 @property (strong, nonatomic) NSArray *timeVotes;
 @property (strong, nonatomic) PFObject *parseObj;
 
++ (PFQuery *) cachedQueryWithClassName:(NSString *)name;
+
 @end
 
 @implementation SFEvent
+
++ (PFQuery *) cachedQueryWithClassName:(NSString *)name
+{
+  PFQuery *query = [PFQuery queryWithClassName:name];
+  query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+  
+  return query;
+}
 
 // init with a parse db object for convenience
 - (instancetype) initWithPFObject:(PFObject *)eventObj
@@ -101,7 +111,7 @@
   
   [eventObj save];
   
-  PFQuery *dupCheck = [PFQuery queryWithClassName:@"Event"];
+  PFQuery *dupCheck = [SFEvent cachedQueryWithClassName:@"Event"];
   [dupCheck whereKey:@"name" equalTo:name];
   [dupCheck whereKey:@"host" equalTo:hostID];
   [dupCheck whereKey:@"date" equalTo:date];
@@ -140,7 +150,7 @@
 
 + (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID
 {
-  PFQuery *findEvent = [PFQuery queryWithClassName:@"Event"];
+  PFQuery *findEvent = [SFEvent cachedQueryWithClassName:@"Event"];
   [findEvent whereKey:@"name" equalTo:name];
   [findEvent whereKey:@"host" equalTo:hostID];
   [findEvent whereKey:@"date" equalTo:date];
@@ -279,12 +289,14 @@
 
 - (void) tallyVotes
 {
-  PFQuery *voteQuery = [PFQuery queryWithClassName:@"Vote"];
+  NSLog(@"Tally votes");
+  
+  PFQuery *voteQuery = [SFEvent cachedQueryWithClassName:@"Vote"];
   [voteQuery whereKey:@"eventID" equalTo:self.eventID];
   NSArray *votes = [voteQuery findObjects];
   NSMutableDictionary *venueDict = [[NSMutableDictionary alloc] init];
   __block int maxVotes = 0;
-  __block NSString *maxVenue = nil;
+  __block NSString *maxVenue = self.venueID;
   
   [votes enumerateObjectsUsingBlock:^(PFObject *obj, NSUInteger idx, BOOL *stop) {
     NSString *venueID = [obj objectForKey:@"venueID"];
@@ -303,9 +315,6 @@
       maxVenue = venueID;
     }
   }];
-  
-  self.venueID = maxVenue;
-  [self.parseObj setObject:maxVenue forKey:@"venueID"];
   
   NSMutableDictionary *timeDict = [[NSMutableDictionary alloc] init];
   maxVotes = 0;
@@ -328,11 +337,13 @@
     }
   }];
   
+  if (maxVenue == nil && [self.date compare:maxTime] == NSOrderedSame)
+    return;
+  
   self.venueID = maxVenue;
   self.date = maxTime;
   [self.parseObj setObject:maxVenue forKey:@"venueID"];
   [self.parseObj setObject:maxTime forKey:@"date"];
-  
   [self.parseObj saveInBackground];
 }
 

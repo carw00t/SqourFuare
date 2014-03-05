@@ -20,9 +20,19 @@
 
 @property (nonatomic, strong) PFObject *parseObj;
 
++ (PFQuery *) cachedQueryWithClassName:(NSString *)name;
+
 @end
 
 @implementation SFUser
+
++ (PFQuery *) cachedQueryWithClassName:(NSString *)name
+{
+  PFQuery *query = [PFQuery queryWithClassName:name];
+  query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+  
+  return query;
+}
 
 // init with a parse db object for convenience
 - (instancetype) initWithPFObject:(PFObject *)userObj
@@ -79,7 +89,7 @@
   
   [signupObj save];
   
-  PFQuery *dupCheck = [PFQuery queryWithClassName:@"User"];
+  PFQuery *dupCheck = [SFUser cachedQueryWithClassName:@"User"];
   [dupCheck whereKey:@"username" equalTo:username];
   [dupCheck whereKey:@"password" equalTo:password];
   NSArray *users = [dupCheck findObjects];
@@ -117,7 +127,7 @@
 
 + (instancetype) userWithUsername:(NSString *)username
 {
-  PFQuery *findUser = [PFQuery queryWithClassName:@"User"];
+  PFQuery *findUser = [SFUser cachedQueryWithClassName:@"User"];
   [findUser whereKey:@"username" equalTo:username];
   
   PFObject *userObj = [findUser getFirstObject];
@@ -126,7 +136,7 @@
 
 + (instancetype) userWithUsername:(NSString *)username password:(NSString *)password
 {
-  PFQuery *findUser = [PFQuery queryWithClassName:@"User"];
+  PFQuery *findUser = [SFUser cachedQueryWithClassName:@"User"];
   [findUser whereKey:@"username" equalTo:username];
   [findUser whereKey:@"password" equalTo:password];
   
@@ -172,7 +182,7 @@
 
 - (NSArray *) getFriendsAsObjects
 {
-  PFQuery *friendQuery = [PFQuery queryWithClassName:@"User"];
+  PFQuery *friendQuery = [SFUser cachedQueryWithClassName:@"User"];
   [friendQuery whereKey:@"objectId" containedIn:self.friends];
   
   return [friendQuery findObjects];
