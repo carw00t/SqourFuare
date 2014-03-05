@@ -157,6 +157,7 @@ typedef enum SFInviteType {
 
 - (IBAction)rejectInviteButton:(UIButton *)sender
 {
+  [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end
