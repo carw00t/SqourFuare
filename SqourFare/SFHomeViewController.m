@@ -14,14 +14,14 @@ static NSString *goingEventName = @"Going Events";
 static NSString *invitedEventName = @"Invited Events";
 
 @interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
-@property (strong, nonatomic) NSMutableArray *userFriends;
+@property (strong, nonatomic) NSArray *userFriends;
 @end
 
 @implementation SFHomeViewController
 - (void) userLoggedIn:(SFUser *)user
 {
   self.loggedInUser = user;
-  self.userFriends = [NSMutableArray arrayWithArray:[self.loggedInUser getFriendsAsObjects]];
+  self.userFriends = [self.loggedInUser getFriendsAsObjects];
   
   [self.navigationController popToRootViewControllerAnimated:YES];
   [self.navigationController setNavigationBarHidden:NO animated:NO];
@@ -70,6 +70,7 @@ static NSString *invitedEventName = @"Invited Events";
 {
   [super viewWillAppear:animated];
   
+  self.userFriends = [self.loggedInUser getFriendsAsObjects];
   [self.homeTableView reloadData];
 }
 
