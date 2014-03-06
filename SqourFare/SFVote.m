@@ -26,7 +26,8 @@
 + (PFQuery *) cachedQueryWithClassName:(NSString *)name
 {
   PFQuery *query = [PFQuery queryWithClassName:name];
-  query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+  // query.cachePolicy = kPFCachePolicyCacheElseNetwork;
+  query.cachePolicy = kPFCachePolicyNetworkElseCache;
   
   return query;
 }
