@@ -121,8 +121,18 @@ static NSString *invitedEventName = @"Invited Events";
   
   // Get the dates to display
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  [dateFormatter setDateFormat:@"hh:mm"];
-  NSString *eventTime = [dateFormatter stringFromDate:event.date];
+  //[dateFormatter setDateFormat:@"hh:mm"]; gives the hour and minute
+  [dateFormatter setDateFormat:@"HH"];
+  NSString *eventTime;// = [dateFormatter stringFromDate:event.date];
+  NSString *eventHourString = [dateFormatter stringFromDate:event.date];
+  NSInteger eventHour = [eventHourString integerValue];
+  if (eventHour >= 5 && eventHour < 11) {
+    eventTime = @"Breakfast";
+  } else if (eventHour >= 11 && eventHour < 4) {
+    eventTime = @"Lunch";
+  } else {
+    eventTime = @"Dinner";
+  }
   [dateFormatter setDateFormat:@"EEE"];
   NSString *eventDay = [dateFormatter stringFromDate:event.date];
   
