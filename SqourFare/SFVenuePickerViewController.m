@@ -15,7 +15,7 @@ static NSString * const clientId = @"42SYZZI4H5NZHFFI0UNEGW51INGXKDUUG2OQCDLMRV3
 static NSString * const clientSecret = @"RBHL3IV51VYYGDNJZ2HSS2IFGRPB4AH3QVFXGUU2OCDEAZTV";
 static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/venues/explore";
 
-@interface SFVenuePickerViewController ()
+@interface SFVenuePickerViewController () <MKMapViewDelegate>
 
 @property (strong, nonatomic) SFEvent *event;
 @property (strong, nonatomic) SFUser *loggedInUser;
@@ -34,6 +34,17 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
     self.venues = [self getVenues];
   }
   return self;
+}
+
+- (void)mapView:(MKMapView *)mapView didUpdateUserLocation:(MKUserLocation *)userLocation
+{
+  MKCoordinateRegion mapRegion;
+  mapRegion.center = mapView.userLocation.coordinate;
+  mapRegion.span.latitudeDelta = 0.2;
+  mapRegion.span.longitudeDelta = 0.2;
+  
+  [mapView setRegion:mapRegion animated: YES];
+  //[mapView setCenterCoordinate:userLocation.coordinate animated:YES];
 }
 
 - (NSArray *) getVenues
@@ -87,8 +98,9 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   UIBarButtonItem *voteButton = [[UIBarButtonItem alloc] initWithTitle:@"Place Votes" style:UIBarButtonItemStylePlain target:self action:@selector(placeVotes:)];
   self.navigationItem.rightBarButtonItem = voteButton;
   
-  self.title = @"What's good?";
-  
+  self.title = @"Pick some places";
+  self.mapView.showsUserLocation = YES;
+  self.mapView.delegate = self;
   // Uncomment the following line to preserve selection between presentations.
   // self.clearsSelectionOnViewWillAppear = NO;
 
