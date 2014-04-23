@@ -9,14 +9,20 @@
 #import "SFEvent.h"
 #import <Parse/Parse.h>
 
+static NSString * const clientId = @"42SYZZI4H5NZHFFI0UNEGW51INGXKDUUG2OQCDLMRV3IJKHQ";
+static NSString * const clientSecret = @"RBHL3IV51VYYGDNJZ2HSS2IFGRPB4AH3QVFXGUU2OCDEAZTV";
+static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/venues/";
+
 @interface SFEvent ()
 
 @property (strong, nonatomic) NSString *eventID;
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *hostUserID;
 @property (strong, nonatomic) NSDate *date;
+@property (strong, nonatomic) NSString *venueName;
 @property (strong, nonatomic) NSString *venueID;
 @property (strong, nonatomic) NSArray *proposedVenues;
+@property (strong, nonatomic) NSArray *proposedVenueNames;
 @property (strong, nonatomic) NSArray *invited;
 @property (strong, nonatomic) NSArray *confirmedMembers;
 @property (strong, nonatomic) NSArray *votes;
@@ -50,6 +56,7 @@
     self.name = eventObj[@"name"];
     self.hostUserID = eventObj[@"host"];
     self.date = eventObj[@"date"];
+    self.venueName = eventObj[@"venueName"];
     self.venueID = eventObj[@"venueID"];
     self.proposedVenues = eventObj[@"proposedVenues"];
     self.invited = eventObj[@"invited"];
@@ -62,10 +69,15 @@
   return self;
 }
 
-- (instancetype) initWithEventID:(NSString *)eventID name:(NSString*)name
-                            host:(NSString *)hostID date:(NSDate*)date
-                           venue:(NSString *)venueID proposedVenues:(NSArray *)proposed
-                    invitedUsers:(NSArray *)invited confirmedMembers:(NSArray *)confirmed
+- (instancetype) initWithEventID:(NSString *)eventID
+                            name:(NSString*)name
+                            host:(NSString *)hostID
+                            date:(NSDate*)date
+                       venueName:(NSString *)venueName
+                           venue:(NSString *)venueID
+                  proposedVenues:(NSArray *)proposed
+                    invitedUsers:(NSArray *)invited
+                confirmedMembers:(NSArray *)confirmed
                            votes:(NSArray *)votes timeVotes:(NSArray *)timeVotes
 {
   if (self = [super init]) {
@@ -73,6 +85,7 @@
     self.name = name;
     self.hostUserID = hostID;
     self.date = date;
+    self.venueName = venueName;
     self.venueID = venueID;
     self.proposedVenues = proposed;
     self.invited = invited;
@@ -85,6 +98,7 @@
     [self.parseObj setObject:name forKey:@"name"];
     [self.parseObj setObject:hostID forKey:@"host"];
     [self.parseObj setObject:date forKey:@"date"];
+    [self.parseObj setObject:venueName forKey:@"venueName"];
     [self.parseObj setObject:venueID forKey:@"venueID"];
     [self.parseObj setObject:proposed forKey:@"proposedVenues"];
     [self.parseObj setObject:invited forKey:@"invited"];
@@ -237,17 +251,23 @@
     [self.parseObj saveInBackground];
   }
 }
-
-- (void) proposeVenue:(NSString *)venueID
+/*
+ 
+ I dont think this works. proposing a vendue should change the venueID right? cuz venueID = the top selection.
+- (void) proposeVenueName:(NSString *)venueName venueID:(NSString *)venueID
 {
   if (![self.proposedVenues containsObject:venueID]) {
     self.proposedVenues = [self.proposedVenues arrayByAddingObject:venueID];
+    [self.proposedVenueNames arrayByAddingObject:venueName];
+
+    [self.parseObj addObject:venueName forKey:@"venueName"];
+    [self.parseObj addObject:venueID forKey:@"venueID"];
     [self.parseObj addObject:venueID forKey:@"proposedVenues"];
     [self.parseObj saveInBackground];
   }
 }
 
-- (void) proposeVenues:(NSArray *)venueIDs
+- (void) proposeVenuesNames:(NSArray *)venueNames IDs:(NSArray *)venueIDs
 {
   // conceptually efficient, if not practically so
   NSArray *updatedVenues = [[NSSet setWithArray:[self.proposedVenues arrayByAddingObjectsFromArray:venueIDs]] allObjects];
@@ -258,6 +278,7 @@
     [self.parseObj saveInBackground];
   }
 }
+ */
 
 - (void) removeUser:(NSString *)userID
 {
@@ -279,13 +300,30 @@
   [self.parseObj saveInBackground];
 }
 
-- (void) setVenue:(NSString *)venueID
+- (void) setVenueName:(NSString *)venueName ID:(NSString *)venueID
 {
   if (self.venueID != venueID) {
     self.venueID = venueID;
+    self.venueName = venueName;
     [self.parseObj setObject:venueID forKey:@"venueID"];
+    [self.parseObj setObject:venueName forKey:@"venueName"];
     [self.parseObj saveInBackground];
   }
+}
+
+- (NSString *) getVenueNameById:(NSString *)venueID
+{
+  NSString *endpoint = [NSString stringWithFormat:@"%@%@?client_id=%@&client_secret=%@&v=20140227",
+                        foursquareEndpoint,
+                        venueID,
+                        clientId,
+                        clientSecret];
+  
+  NSData *result = [NSData dataWithContentsOfURL:[NSURL URLWithString:endpoint]];
+  NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
+  
+  NSString *venueName = [[[resultDict objectForKey:@"response"] objectForKey:@"venue"] objectForKey:@"name"];
+  return venueName;
 }
 
 - (void) tallyVotes
@@ -343,7 +381,9 @@
   
   self.venueID = maxVenue;
   self.date = maxTime;
+  self.venueName = [self getVenueNameById:self.venueID];
   [self.parseObj setObject:maxVenue forKey:@"venueID"];
+  [self.parseObj setObject:self.venueName forKey:@"venueName"];
   [self.parseObj setObject:maxTime forKey:@"date"];
   [self.parseObj saveInBackground];
 }

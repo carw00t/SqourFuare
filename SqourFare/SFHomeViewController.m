@@ -120,21 +120,24 @@ static NSString *invitedEventName = @"Invited Events";
   
   // Get the dates to display
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  //[dateFormatter setDateFormat:@"hh:mm"]; gives the hour and minute
+  [dateFormatter setDateFormat:@"h:mm"]; //gives the hour and minute
+  NSString *eventHourMinutes = [dateFormatter stringFromDate:event.date];
   [dateFormatter setDateFormat:@"HH"];
-  NSString *eventTime;// = [dateFormatter stringFromDate:event.date];
+  NSString *eventTime;
   NSString *eventHourString = [dateFormatter stringFromDate:event.date];
   NSInteger eventHour = [eventHourString integerValue];
   if (eventHour >= 5 && eventHour < 11) {
     eventTime = @"Breakfast";
-  } else if (eventHour >= 11 && eventHour < 4) {
+  } else if (eventHour >= 11 && eventHour < 16) {
     eventTime = @"Lunch";
   } else {
     eventTime = @"Dinner";
   }
+
   [dateFormatter setDateFormat:@"EEE"];
   NSString *eventDay = [dateFormatter stringFromDate:event.date];
-  
+  eventDay = [eventDay stringByAppendingString:@" "];
+  eventDay = [eventDay stringByAppendingString:eventHourMinutes];
   cell.restaurantNameLabel.text = event.name;
   cell.dayLabel.text = eventDay;
   cell.timeLabel.text = eventTime;

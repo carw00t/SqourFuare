@@ -27,7 +27,6 @@ static NSString *invitedHeader = @"Also Invited";
   self = [super init];
   if (self) {
     self.event = event;
-    
     if (self.event.venueID == nil) {
       [self.event tallyVotes];
     }
@@ -49,9 +48,13 @@ static NSString *invitedHeader = @"Also Invited";
   }
   else {
     NSLog(@"venueID: %@", self.event.venueID);
-    self.venueLabel.text = self.event.venueID;
+    self.venueLabel.text = self.event.venueName;
   }
-  self.dateLabel.text = [self.event.date description];
+  
+  NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+  [dateFormatter setDateFormat:@"M/d h:mm a"];
+  NSString *date = [dateFormatter stringFromDate:self.event.date];
+  self.dateLabel.text = date;
   
   [self.attendingTableView reloadData];
   
