@@ -21,7 +21,8 @@
                   proposedVenues:(NSArray *)proposed
                     invitedUsers:(NSArray *)invited
                 confirmedMembers:(NSArray *)confirmed
-                           votes:(NSArray *)votes timeVotes:(NSArray *)timeVotes;
+                           votes:(NSArray *)votes
+                       timeVotes:(NSArray *)timeVotes;
 
 - (void) addTimeVote:(NSDate *)time userID:(NSString *)userID;
 - (void) addVote:(NSString *)voteID;

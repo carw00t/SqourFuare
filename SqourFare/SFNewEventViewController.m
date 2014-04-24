@@ -31,7 +31,7 @@
   UIBarButtonItem *inviteButton = [[UIBarButtonItem alloc] initWithTitle:@"Invite" style:UIBarButtonItemStylePlain target:self action:@selector(inviteFriends:)];
   self.navigationItem.rightBarButtonItem = inviteButton;
   
-  self.title = @"New Event?";
+  self.title = @"Make New Event";
   
   self.friendTableView.delegate = self;
   self.friendTableView.dataSource = self;
@@ -47,6 +47,10 @@
 -(void)inviteFriends:(id)sender
 {
   NSArray *indexPaths = [self.friendTableView indexPathsForSelectedRows];
+  if (indexPaths.count == 0) {
+    
+  }
+  
   SFEvent *newEvent = [SFEvent createEventWithName:self.eventNameField.text date:self.datePicker.date host:self.loggedInUser.userID];
   NSMutableArray *invitedUsers = [[NSMutableArray alloc] initWithObjects:self.loggedInUser.userID, nil];
   [[self loggedInUser] inviteToEvent:newEvent.eventID];

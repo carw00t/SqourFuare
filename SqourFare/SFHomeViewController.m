@@ -8,13 +8,16 @@
 
 #import "SFHomeViewController.h"
 
-static const NSInteger confirmedSection = 0;
-static const NSInteger invitedSection = 1;
+static const NSInteger comingUpSection = 0;
+static const NSInteger confirmedSection = 1;
+static const NSInteger invitedSection = 2;
+static NSString *comingUpEventName = @"Coming Up Soon";
 static NSString *goingEventName = @"Confirmed";
 static NSString *invitedEventName = @"Invited";
 
 @interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) NSMutableArray *userFriends;
+@property (strong, nonatomic) NSArray *comingUpEvents;
 @property (strong, nonatomic) NSArray *confirmedEvents;
 @property (strong, nonatomic) NSArray *invitedEvents;
 @end
@@ -71,15 +74,22 @@ static NSString *invitedEventName = @"Invited";
 
 - (void)refreshData
 {
+  NSMutableArray *comingUpEvents = [NSMutableArray array];
   NSMutableArray *confirmedEvents = [NSMutableArray array];
   NSMutableArray *invitedEvents = [NSMutableArray array];
   
   for (NSString *confirmedEventID in self.loggedInUser.confirmedEventIDs) {
-    [confirmedEvents addObject:[SFEvent eventWithID:confirmedEventID]];
+    SFEvent *event = [SFEvent eventWithID:confirmedEventID];
+    if ([event.date timeIntervalSinceNow] < 30*60) {
+      [comingUpEvents addObject:event];
+    } else {
+      [confirmedEvents addObject:event];
+    }
   }
   for (NSString *invitedEventID in self.loggedInUser.inviteIDs) {
     [invitedEvents addObject:[SFEvent eventWithID:invitedEventID]];
   }
+  self.comingUpEvents = comingUpEvents;
   self.confirmedEvents = confirmedEvents;
   self.invitedEvents = invitedEvents;
   
@@ -126,14 +136,15 @@ static NSString *invitedEventName = @"Invited";
   SFEvent *event = nil;
   
   switch (indexPath.section) {
+    case comingUpSection:
+      event = [self.comingUpEvents objectAtIndex:indexPath.row];
+      break;
     case confirmedSection:
       event = [self.confirmedEvents objectAtIndex:indexPath.row];
       break;
-      
     case invitedSection:
       event = [self.invitedEvents objectAtIndex:indexPath.row];
       break;
-      
     default:
       break;
   }
@@ -167,12 +178,16 @@ static NSString *invitedEventName = @"Invited";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
   switch (section) {
+    case comingUpSection:
+      return (NSUInteger)[self.comingUpEvents count];
+      break;
+      
     case confirmedSection:
-      return [self.loggedInUser.confirmedEventIDs count];
+      return (NSUInteger)[self.confirmedEvents count];
       break;
       
     case invitedSection:
-      return [self.loggedInUser.inviteIDs count];
+      return (NSUInteger)[self.invitedEvents count];
       break;
       
     default:
@@ -183,20 +198,21 @@ static NSString *invitedEventName = @"Invited";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  return 2;
+  return 3;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
   switch (section) {
+    case comingUpSection:
+      return comingUpEventName;
+      break;
     case confirmedSection:
       return goingEventName;
       break;
-      
     case invitedSection:
       return invitedEventName;
       break;
-      
     default:
       return nil;
       break;
@@ -206,34 +222,29 @@ static NSString *invitedEventName = @"Invited";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   SFEvent *event = nil;
-  
-  // TODO(jacob) this could not be the expected event if for example the user has received
-  // an invite to an event after the table was loaded. one way to fix this would be to
-  // store the eventIDs as a private field
   switch (indexPath.section) {
+    case comingUpSection:{
+      // load the event overview
+      event = [self.comingUpEvents objectAtIndex:indexPath.row];
+      SFEventOverviewViewController *eventOverview = [[SFEventOverviewViewController alloc] initWithEvent:event];
+      [self.navigationController pushViewController:eventOverview animated:YES];
+      return;
+      break;
+    }
     case confirmedSection:
-      event = [SFEvent eventWithID:[self.loggedInUser.confirmedEventIDs objectAtIndex:indexPath.row]];
+      event = [self.confirmedEvents objectAtIndex:indexPath.row];
       break;
       
     case invitedSection:
-      event = [SFEvent eventWithID:[self.loggedInUser.inviteIDs objectAtIndex:indexPath.row]];
+      event = [self.invitedEvents objectAtIndex:indexPath.row];
       break;
       
     default:
       break;
   }
 
-  NSLog(@"Selected event: %@", event.name);
-
-  // check if event is less than 30 minutes from now
-  if ([event.date timeIntervalSinceNow] < 30*60) {
-    SFEventOverviewViewController *eventOverview = [[SFEventOverviewViewController alloc] initWithEvent:event];
-    [self.navigationController pushViewController:eventOverview animated:YES];
-  }
-  else {
-    SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithUser:self.loggedInUser event:event];
-    [self.navigationController pushViewController:mealVC animated:YES];
-  }
+  SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithUser:self.loggedInUser event:event];
+  [self.navigationController pushViewController:mealVC animated:YES];
 }
 
 @end
