@@ -174,6 +174,20 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   return [[SFEvent alloc] initWithPFObject:eventObj];
 }
 
++ (NSArray *) currentEventsWithIDs: (NSArray *)eventIDs
+{
+  // returns events that that happened at the latest 30 min ago.
+  PFQuery *query = [PFQuery queryWithClassName:@"Event"];
+  [query whereKey:@"date" greaterThan:[[NSDate date] dateByAddingTimeInterval:-60*30]];
+  [query whereKey:@"objectId" containedIn:eventIDs];
+  NSArray *pfEvents = [query findObjects];
+  NSMutableArray *events = [NSMutableArray array];
+  for (PFObject *pfEvent in pfEvents) {
+    [events addObject:[[SFEvent alloc] initWithPFObject:pfEvent]];
+  }
+  return events;
+}
+
 - (void) addTimeVote:(NSDate *)time userID:(NSString *)userID
 {
   // TODO(jacob) this currently allows users to vote multiple times... fix

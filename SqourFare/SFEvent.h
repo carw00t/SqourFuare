@@ -52,6 +52,7 @@
 + (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
 // TODO(jacob) this should be an initializer
 + (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
++ (NSArray *) currentEventsWithIDs: (NSArray *)eventIDs;
 
 
 @end

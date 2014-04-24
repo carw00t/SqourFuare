@@ -103,7 +103,7 @@ typedef enum SFInviteType {
 {
   [super viewDidLoad];
   
-  UIBarButtonItem *voteButton = [[UIBarButtonItem alloc] initWithTitle:@"Vote" style:UIBarButtonItemStylePlain target:self action:@selector(voteForVenues:)];
+  UIBarButtonItem *voteButton = [[UIBarButtonItem alloc] initWithTitle:@"Venues" style:UIBarButtonItemStylePlain target:self action:@selector(voteForVenues:)];
   self.navigationItem.rightBarButtonItem = voteButton;
   
   self.title = @"Meal Invite";
@@ -142,6 +142,16 @@ typedef enum SFInviteType {
 
 - (IBAction)acceptInviteButton:(UIButton *)sender
 {
+  if (self.venueIDs.count == 0) {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Venues Selected"
+                                                    message:@"Please select at least one venue before placing votes."
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    return;
+  }
+  
   // need to get rid of past votes if user is revoting
   [SFVote deleteVotesForUserID:self.loggedInUser.userID eventID:self.event.eventID];
   

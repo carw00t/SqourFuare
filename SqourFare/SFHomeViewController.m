@@ -76,8 +76,7 @@ static NSString *invitedEventName = @"Invited";
 {
   NSMutableArray *comingUpEvents = [NSMutableArray array];
   NSMutableArray *confirmedEvents = [NSMutableArray array];
-  NSMutableArray *invitedEvents = [NSMutableArray array];
-  
+  /*
   for (NSString *confirmedEventID in self.loggedInUser.confirmedEventIDs) {
     SFEvent *event = [SFEvent eventWithID:confirmedEventID];
     if ([event.date timeIntervalSinceNow] < 30*60) {
@@ -89,9 +88,18 @@ static NSString *invitedEventName = @"Invited";
   for (NSString *invitedEventID in self.loggedInUser.inviteIDs) {
     [invitedEvents addObject:[SFEvent eventWithID:invitedEventID]];
   }
+   */
+  for (SFEvent *event in [SFEvent currentEventsWithIDs:self.loggedInUser.confirmedEventIDs]) {
+    if ([event.date timeIntervalSinceNow] < 30*60) {
+      [comingUpEvents addObject:event];
+    } else {
+      [confirmedEvents addObject:event];
+    }
+  }
+  
   self.comingUpEvents = comingUpEvents;
   self.confirmedEvents = confirmedEvents;
-  self.invitedEvents = invitedEvents;
+  self.invitedEvents = [SFEvent currentEventsWithIDs:self.loggedInUser.inviteIDs];
   
   [self.homeTableView reloadData];
 }
