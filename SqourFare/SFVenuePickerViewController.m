@@ -20,6 +20,7 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 @property (strong, nonatomic) SFEvent *event;
 @property (strong, nonatomic) SFUser *loggedInUser;
 @property (strong, nonatomic) NSArray *venues;
+@property (strong, nonatomic) NSArray *pastVotes;
 
 @end
 
@@ -101,6 +102,10 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   self.title = @"Pick some places";
   self.mapView.showsUserLocation = YES;
   self.mapView.delegate = self;
+  
+  // highlight venues that were previously voted for
+  NSArray *pastVotes = [SFVote votesForUser:self.loggedInUser.userID Event:self.event.eventID];
+  self.pastVotes = pastVotes;
   // Uncomment the following line to preserve selection between presentations.
   // self.clearsSelectionOnViewWillAppear = NO;
 
@@ -135,6 +140,15 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
     cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
   }
   
+  if (self.pastVotes.count > 0) {
+    // need to check if user voted before to higlight venues
+    for (SFVote *vote in self.pastVotes) {
+      NSString *venueID = [self.venues objectAtIndex:indexPath.row][@"id"];
+      if ([vote.venueID isEqualToString:venueID]) {
+        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+      }
+    }
+  }
   cell.textLabel.text = [self.venues objectAtIndex:indexPath.row][@"name"];
   
   return cell;
