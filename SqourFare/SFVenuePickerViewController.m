@@ -26,13 +26,14 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 
 @implementation SFVenuePickerViewController
 
-- (id)initWithUser:(SFUser *)user event:(SFEvent *)event
+- (id)initWithUser:(SFUser *)user event:(SFEvent *)event pastVotes:(NSArray *)pastVotes
 {
   self = [super init];
   if (self) {
     self.event = event;
     self.loggedInUser = user;
     self.venues = [self getVenues];
+    self.pastVotes = pastVotes;
   }
   return self;
 }
@@ -103,9 +104,6 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   self.mapView.showsUserLocation = YES;
   self.mapView.delegate = self;
   
-  // highlight venues that were previously voted for
-  NSArray *pastVotes = [SFVote votesForUser:self.loggedInUser.userID Event:self.event.eventID];
-  self.pastVotes = pastVotes;
   // Uncomment the following line to preserve selection between presentations.
   // self.clearsSelectionOnViewWillAppear = NO;
 

@@ -19,6 +19,7 @@ typedef enum SFInviteType {
 @property (strong, nonatomic) SFUser *loggedInUser;
 @property (strong, nonatomic) NSArray *venueIDs;
 @property (strong, nonatomic) NSMutableArray *possibleEventTimes;
+@property (strong, nonatomic) NSArray *pastVotes;
 
 @end
 
@@ -126,7 +127,9 @@ typedef enum SFInviteType {
 
 -(void)voteForVenues:(id)sender
 {
-  SFVenuePickerViewController *venuePicker = [[SFVenuePickerViewController alloc] initWithUser:self.loggedInUser event:self.event];
+  // used to highlight venues that were previously voted for
+  self.pastVotes = [SFVote votesForUser:self.loggedInUser.userID Event:self.event.eventID];
+  SFVenuePickerViewController *venuePicker = [[SFVenuePickerViewController alloc] initWithUser:self.loggedInUser event:self.event pastVotes:(NSArray *)self.pastVotes];
   venuePicker.venuePickDelegate = self;
   [self.navigationController pushViewController:venuePicker animated:YES];
 }
@@ -139,6 +142,9 @@ typedef enum SFInviteType {
 
 - (IBAction)acceptInviteButton:(UIButton *)sender
 {
+  // need to get rid of past votes if user is revoting
+  [SFVote deleteVotesForUserID:self.loggedInUser.userID eventID:self.event.eventID];
+  
   NSDate *selectedDate = [self.possibleEventTimes objectAtIndex:
                           self.timeChooserOutlet.selectedSegmentIndex];
   NSLog(@"%@", selectedDate);

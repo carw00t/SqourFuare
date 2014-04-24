@@ -156,4 +156,9 @@
   return votes;
 }
 
+-(void) delete
+{
+  [self.parseObj delete];
+}
+
 @end
