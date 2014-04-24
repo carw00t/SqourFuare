@@ -10,11 +10,13 @@
 
 static const NSInteger confirmedSection = 0;
 static const NSInteger invitedSection = 1;
-static NSString *goingEventName = @"Going Events";
-static NSString *invitedEventName = @"Invited Events";
+static NSString *goingEventName = @"Confirmed";
+static NSString *invitedEventName = @"Invited";
 
 @interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) NSMutableArray *userFriends;
+@property (strong, nonatomic) NSArray *confirmedEvents;
+@property (strong, nonatomic) NSArray *invitedEvents;
 @end
 
 @implementation SFHomeViewController
@@ -27,7 +29,7 @@ static NSString *invitedEventName = @"Invited Events";
   [self.navigationController setNavigationBarHidden:NO animated:NO];
   NSLog(@"User %@ logged in", user.username);
   
-  [self.homeTableView reloadData];
+  [self refreshData];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -43,11 +45,11 @@ static NSString *invitedEventName = @"Invited Events";
 {
   [super viewDidLoad];
   
-  self.title = @"All Events";
+  self.title = @"Events";
   self.homeTableView.delegate = self;
   self.homeTableView.dataSource = self;
   
-  UIBarButtonItem *newMealButton = [[UIBarButtonItem alloc] initWithTitle:@"New Meal" style:UIBarButtonItemStylePlain target:self action:@selector(newMeal:)];
+  UIBarButtonItem *newMealButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newMeal:)];
   self.navigationItem.rightBarButtonItem = newMealButton;
   
   UIBarButtonItem *profileButton = [[UIBarButtonItem alloc] initWithTitle:@"You" style:UIBarButtonItemStylePlain target:self action:@selector(viewProfile:)];
@@ -60,10 +62,28 @@ static NSString *invitedEventName = @"Invited Events";
   [self.homeTableView addSubview:refreshControl];
 }
 
-- (void)refresh:(UIRefreshControl *)refreshControl {
+- (void)refresh:(UIRefreshControl *)refreshControl
+{
   [PFQuery clearAllCachedResults];
-  [self.homeTableView reloadData];
+  [self refreshData];
   [refreshControl endRefreshing];
+}
+
+- (void)refreshData
+{
+  NSMutableArray *confirmedEvents = [NSMutableArray array];
+  NSMutableArray *invitedEvents = [NSMutableArray array];
+  
+  for (NSString *confirmedEventID in self.loggedInUser.confirmedEventIDs) {
+    [confirmedEvents addObject:[SFEvent eventWithID:confirmedEventID]];
+  }
+  for (NSString *invitedEventID in self.loggedInUser.inviteIDs) {
+    [invitedEvents addObject:[SFEvent eventWithID:invitedEventID]];
+  }
+  self.confirmedEvents = confirmedEvents;
+  self.invitedEvents = invitedEvents;
+  
+  [self.homeTableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -107,11 +127,11 @@ static NSString *invitedEventName = @"Invited Events";
   
   switch (indexPath.section) {
     case confirmedSection:
-      event = [SFEvent eventWithID:[self.loggedInUser.confirmedEventIDs objectAtIndex:indexPath.row]];
+      event = [self.confirmedEvents objectAtIndex:indexPath.row];
       break;
       
     case invitedSection:
-      event = [SFEvent eventWithID:[self.loggedInUser.inviteIDs objectAtIndex:indexPath.row]];
+      event = [self.invitedEvents objectAtIndex:indexPath.row];
       break;
       
     default:
