@@ -17,7 +17,6 @@
 		163494E118B5AA440086D393 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494D818B5AA440086D393 /* MobileCoreServices.framework */; };
 		163494E218B5AA440086D393 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494D918B5AA440086D393 /* QuartzCore.framework */; };
 		163494E318B5AA440086D393 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494DA18B5AA440086D393 /* Security.framework */; };
-		163494E418B5AA440086D393 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494DB18B5AA440086D393 /* StoreKit.framework */; };
 		163494E518B5AA440086D393 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 163494DC18B5AA440086D393 /* SystemConfiguration.framework */; };
 		166D57A318C6F515001D6560 /* SFNewEventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 166D57A118C6F515001D6560 /* SFNewEventViewController.m */; };
 		166D57A418C6F515001D6560 /* SFNewEventViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 166D57A218C6F515001D6560 /* SFNewEventViewController.xib */; };
@@ -74,7 +73,6 @@
 		163494D818B5AA440086D393 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		163494D918B5AA440086D393 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		163494DA18B5AA440086D393 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		163494DB18B5AA440086D393 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		163494DC18B5AA440086D393 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		166D57A018C6F515001D6560 /* SFNewEventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFNewEventViewController.h; sourceTree = "<group>"; };
 		166D57A118C6F515001D6560 /* SFNewEventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFNewEventViewController.m; sourceTree = "<group>"; };
@@ -135,7 +133,6 @@
 				163494E118B5AA440086D393 /* MobileCoreServices.framework in Frameworks */,
 				163494E218B5AA440086D393 /* QuartzCore.framework in Frameworks */,
 				163494E318B5AA440086D393 /* Security.framework in Frameworks */,
-				163494E418B5AA440086D393 /* StoreKit.framework in Frameworks */,
 				163494E518B5AA440086D393 /* SystemConfiguration.framework in Frameworks */,
 				8E2E893918B559490078DB5B /* CoreGraphics.framework in Frameworks */,
 				8E2E893B18B559490078DB5B /* UIKit.framework in Frameworks */,
@@ -187,7 +184,6 @@
 				163494D818B5AA440086D393 /* MobileCoreServices.framework */,
 				163494D918B5AA440086D393 /* QuartzCore.framework */,
 				163494DA18B5AA440086D393 /* Security.framework */,
-				163494DB18B5AA440086D393 /* StoreKit.framework */,
 				163494DC18B5AA440086D393 /* SystemConfiguration.framework */,
 				8E2E893618B559490078DB5B /* Foundation.framework */,
 				8E2E893818B559490078DB5B /* CoreGraphics.framework */,
@@ -321,6 +317,14 @@
 				TargetAttributes = {
 					8E2E893218B559490078DB5B = {
 						DevelopmentTeam = 9VUC3R8D65;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+							com.apple.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					8E2E894D18B559490078DB5B = {
 						TestTargetID = 8E2E893218B559490078DB5B;

@@ -19,6 +19,7 @@ typedef enum SFInviteType {
 @property (strong, nonatomic) SFUser *loggedInUser;
 @property (strong, nonatomic) NSArray *venueIDs;
 @property (strong, nonatomic) NSMutableArray *possibleEventTimes;
+@property (strong, nonatomic) NSArray *pastVotes;
 
 @end
 
@@ -102,7 +103,7 @@ typedef enum SFInviteType {
 {
   [super viewDidLoad];
   
-  UIBarButtonItem *voteButton = [[UIBarButtonItem alloc] initWithTitle:@"Vote" style:UIBarButtonItemStylePlain target:self action:@selector(voteForVenues:)];
+  UIBarButtonItem *voteButton = [[UIBarButtonItem alloc] initWithTitle:@"Venues" style:UIBarButtonItemStylePlain target:self action:@selector(voteForVenues:)];
   self.navigationItem.rightBarButtonItem = voteButton;
   
   self.title = @"Meal Invite";
@@ -126,7 +127,9 @@ typedef enum SFInviteType {
 
 -(void)voteForVenues:(id)sender
 {
-  SFVenuePickerViewController *venuePicker = [[SFVenuePickerViewController alloc] initWithUser:self.loggedInUser event:self.event];
+  // used to highlight venues that were previously voted for
+  self.pastVotes = [SFVote votesForUser:self.loggedInUser.userID Event:self.event.eventID];
+  SFVenuePickerViewController *venuePicker = [[SFVenuePickerViewController alloc] initWithUser:self.loggedInUser event:self.event pastVotes:(NSArray *)self.pastVotes];
   venuePicker.venuePickDelegate = self;
   [self.navigationController pushViewController:venuePicker animated:YES];
 }
@@ -139,6 +142,19 @@ typedef enum SFInviteType {
 
 - (IBAction)acceptInviteButton:(UIButton *)sender
 {
+  if (self.venueIDs.count == 0) {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"No Venues Selected"
+                                                    message:@"Please select at least one venue before placing votes."
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    return;
+  }
+  
+  // need to get rid of past votes if user is revoting
+  [SFVote deleteVotesForUserID:self.loggedInUser.userID eventID:self.event.eventID];
+  
   NSDate *selectedDate = [self.possibleEventTimes objectAtIndex:
                           self.timeChooserOutlet.selectedSegmentIndex];
   NSLog(@"%@", selectedDate);

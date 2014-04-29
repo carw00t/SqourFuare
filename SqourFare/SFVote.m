@@ -142,4 +142,18 @@
   }];
 }
 
++ (NSArray *) votesForUser:(NSString *)userID Event:(NSString *)eventID
+{
+  PFQuery *findEvent = [SFVote cachedQueryWithClassName:@"Vote"];
+  [findEvent whereKey:@"userID" equalTo:userID];
+  [findEvent whereKey:@"eventID" equalTo:eventID];
+  
+  NSArray *parseVoteObjects = [findEvent findObjects];
+  NSMutableArray *votes = [NSMutableArray arrayWithCapacity:parseVoteObjects.count];
+  for (PFObject *parseVote in parseVoteObjects) {
+    [votes addObject:[[SFVote alloc] initWithPFObject:parseVote]];
+  }
+  return votes;
+}
+
 @end

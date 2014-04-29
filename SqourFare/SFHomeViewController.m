@@ -8,10 +8,12 @@
 
 #import "SFHomeViewController.h"
 
-static const NSInteger confirmedSection = 0;
-static const NSInteger invitedSection = 1;
-static NSString *goingEventName = @"Going Events";
-static NSString *invitedEventName = @"Invited Events";
+static const NSInteger comingUpSection = 0;
+static const NSInteger confirmedSection = 1;
+static const NSInteger invitedSection = 2;
+static NSString *comingUpEventName = @"Coming Up Soon";
+static NSString *goingEventName = @"Confirmed";
+static NSString *invitedEventName = @"Invited";
 
 @interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) NSArray *userFriends;
@@ -27,7 +29,7 @@ static NSString *invitedEventName = @"Invited Events";
   [self.navigationController setNavigationBarHidden:NO animated:NO];
   NSLog(@"User %@ logged in", user.username);
   
-  [self.homeTableView reloadData];
+  [self refreshData];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -43,11 +45,11 @@ static NSString *invitedEventName = @"Invited Events";
 {
   [super viewDidLoad];
   
-  self.title = @"All Events";
+  self.title = @"Events";
   self.homeTableView.delegate = self;
   self.homeTableView.dataSource = self;
   
-  UIBarButtonItem *newMealButton = [[UIBarButtonItem alloc] initWithTitle:@"New Meal" style:UIBarButtonItemStylePlain target:self action:@selector(newMeal:)];
+  UIBarButtonItem *newMealButton = [[UIBarButtonItem alloc] initWithTitle:@"+" style:UIBarButtonItemStylePlain target:self action:@selector(newMeal:)];
   self.navigationItem.rightBarButtonItem = newMealButton;
   
   UIBarButtonItem *profileButton = [[UIBarButtonItem alloc] initWithTitle:@"You" style:UIBarButtonItemStylePlain target:self action:@selector(viewProfile:)];
@@ -60,10 +62,43 @@ static NSString *invitedEventName = @"Invited Events";
   [self.homeTableView addSubview:refreshControl];
 }
 
-- (void)refresh:(UIRefreshControl *)refreshControl {
+- (void)refresh:(UIRefreshControl *)refreshControl
+{
   [PFQuery clearAllCachedResults];
-  [self.homeTableView reloadData];
+  [self refreshData];
   [refreshControl endRefreshing];
+}
+
+- (void)refreshData
+{
+  NSMutableArray *comingUpEvents = [NSMutableArray array];
+  NSMutableArray *confirmedEvents = [NSMutableArray array];
+  /*
+  for (NSString *confirmedEventID in self.loggedInUser.confirmedEventIDs) {
+    SFEvent *event = [SFEvent eventWithID:confirmedEventID];
+    if ([event.date timeIntervalSinceNow] < 30*60) {
+      [comingUpEvents addObject:event];
+    } else {
+      [confirmedEvents addObject:event];
+    }
+  }
+  for (NSString *invitedEventID in self.loggedInUser.inviteIDs) {
+    [invitedEvents addObject:[SFEvent eventWithID:invitedEventID]];
+  }
+   */
+  for (SFEvent *event in [SFEvent currentEventsWithIDs:self.loggedInUser.confirmedEventIDs]) {
+    if ([event.date timeIntervalSinceNow] < 30*60) {
+      [comingUpEvents addObject:event];
+    } else {
+      [confirmedEvents addObject:event];
+    }
+  }
+  
+  self.comingUpEvents = comingUpEvents;
+  self.confirmedEvents = confirmedEvents;
+  self.invitedEvents = [SFEvent currentEventsWithIDs:self.loggedInUser.inviteIDs];
+  
+  [self.homeTableView reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -107,35 +142,39 @@ static NSString *invitedEventName = @"Invited Events";
   SFEvent *event = nil;
   
   switch (indexPath.section) {
+    case comingUpSection:
+      event = [self.comingUpEvents objectAtIndex:indexPath.row];
+      break;
     case confirmedSection:
-      event = [SFEvent eventWithID:[self.loggedInUser.confirmedEventIDs objectAtIndex:indexPath.row]];
+      event = [self.confirmedEvents objectAtIndex:indexPath.row];
       break;
-      
     case invitedSection:
-      event = [SFEvent eventWithID:[self.loggedInUser.inviteIDs objectAtIndex:indexPath.row]];
+      event = [self.invitedEvents objectAtIndex:indexPath.row];
       break;
-      
     default:
       break;
   }
   
   // Get the dates to display
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-  //[dateFormatter setDateFormat:@"hh:mm"]; gives the hour and minute
+  [dateFormatter setDateFormat:@"h:mm"]; //gives the hour and minute
+  NSString *eventHourMinutes = [dateFormatter stringFromDate:event.date];
   [dateFormatter setDateFormat:@"HH"];
-  NSString *eventTime;// = [dateFormatter stringFromDate:event.date];
+  NSString *eventTime;
   NSString *eventHourString = [dateFormatter stringFromDate:event.date];
   NSInteger eventHour = [eventHourString integerValue];
   if (eventHour >= 5 && eventHour < 11) {
     eventTime = @"Breakfast";
-  } else if (eventHour >= 11 && eventHour < 4) {
+  } else if (eventHour >= 11 && eventHour < 16) {
     eventTime = @"Lunch";
   } else {
     eventTime = @"Dinner";
   }
+
   [dateFormatter setDateFormat:@"EEE"];
   NSString *eventDay = [dateFormatter stringFromDate:event.date];
-  
+  eventDay = [eventDay stringByAppendingString:@" "];
+  eventDay = [eventDay stringByAppendingString:eventHourMinutes];
   cell.restaurantNameLabel.text = event.name;
   cell.dayLabel.text = eventDay;
   cell.timeLabel.text = eventTime;
@@ -145,12 +184,16 @@ static NSString *invitedEventName = @"Invited Events";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
   switch (section) {
+    case comingUpSection:
+      return (NSUInteger)[self.comingUpEvents count];
+      break;
+      
     case confirmedSection:
-      return [self.loggedInUser.confirmedEventIDs count];
+      return (NSUInteger)[self.confirmedEvents count];
       break;
       
     case invitedSection:
-      return [self.loggedInUser.inviteIDs count];
+      return (NSUInteger)[self.invitedEvents count];
       break;
       
     default:
@@ -161,20 +204,21 @@ static NSString *invitedEventName = @"Invited Events";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-  return 2;
+  return 3;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
   switch (section) {
+    case comingUpSection:
+      return comingUpEventName;
+      break;
     case confirmedSection:
       return goingEventName;
       break;
-      
     case invitedSection:
       return invitedEventName;
       break;
-      
     default:
       return nil;
       break;
@@ -184,34 +228,29 @@ static NSString *invitedEventName = @"Invited Events";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   SFEvent *event = nil;
-  
-  // TODO(jacob) this could not be the expected event if for example the user has received
-  // an invite to an event after the table was loaded. one way to fix this would be to
-  // store the eventIDs as a private field
   switch (indexPath.section) {
+    case comingUpSection:{
+      // load the event overview
+      event = [self.comingUpEvents objectAtIndex:indexPath.row];
+      SFEventOverviewViewController *eventOverview = [[SFEventOverviewViewController alloc] initWithEvent:event];
+      [self.navigationController pushViewController:eventOverview animated:YES];
+      return;
+      break;
+    }
     case confirmedSection:
-      event = [SFEvent eventWithID:[self.loggedInUser.confirmedEventIDs objectAtIndex:indexPath.row]];
+      event = [self.confirmedEvents objectAtIndex:indexPath.row];
       break;
       
     case invitedSection:
-      event = [SFEvent eventWithID:[self.loggedInUser.inviteIDs objectAtIndex:indexPath.row]];
+      event = [self.invitedEvents objectAtIndex:indexPath.row];
       break;
       
     default:
       break;
   }
 
-  NSLog(@"Selected event: %@", event.name);
-
-  // check if event is less than 30 minutes from now
-  if ([event.date timeIntervalSinceNow] < 30*60) {
-    SFEventOverviewViewController *eventOverview = [[SFEventOverviewViewController alloc] initWithEvent:event];
-    [self.navigationController pushViewController:eventOverview animated:YES];
-  }
-  else {
-    SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithUser:self.loggedInUser event:event];
-    [self.navigationController pushViewController:mealVC animated:YES];
-  }
+  SFMealInviteViewController *mealVC = [[SFMealInviteViewController alloc] initWithUser:self.loggedInUser event:event];
+  [self.navigationController pushViewController:mealVC animated:YES];
 }
 
 @end

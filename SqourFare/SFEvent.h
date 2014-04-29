@@ -12,11 +12,17 @@
 @interface SFEvent : NSObject
 
 - (instancetype) initWithPFObject:(PFObject *)eventObj;
-- (instancetype) initWithEventID:(NSString *)eventID name:(NSString*)name
-                            host:(NSString *)hostID date:(NSDate*)date
-                           venue:(NSString *)venueID proposedVenues:(NSArray *)proposed
-                    invitedUsers:(NSArray *)invited confirmedMembers:(NSArray *)confirmed
-                           votes:(NSArray *)votes timeVotes:(NSArray *)timeVotes;
+- (instancetype) initWithEventID:(NSString *)eventID
+                            name:(NSString*)name
+                            host:(NSString *)hostID
+                            date:(NSDate*)date
+                       venueName:(NSString *)venueName
+                           venue:(NSString *)venueID
+                  proposedVenues:(NSArray *)proposed
+                    invitedUsers:(NSArray *)invited
+                confirmedMembers:(NSArray *)confirmed
+                           votes:(NSArray *)votes
+                       timeVotes:(NSArray *)timeVotes;
 
 - (void) addTimeVote:(NSDate *)time userID:(NSString *)userID;
 - (void) addVote:(NSString *)voteID;
@@ -24,16 +30,17 @@
 - (void) confirmMember:(NSString *)userID;
 - (void) inviteUser:(NSString *)userID;
 - (void) inviteUsers:(NSArray *)userIDs;
-- (void) proposeVenue:(NSString *)venueID;
-- (void) proposeVenues:(NSArray *)venueIDs;
+//- (void) proposeVenue:(NSString *)venueID;
+//- (void) proposeVenues:(NSArray *)venueIDs;
 - (void) removeUser:(NSString *)userID;
-- (void) setVenue:(NSString *)venueID;
+- (void) setVenueName:(NSString *)venueName ID:(NSString *)venueID;
 - (void) tallyVotes;
 
 - (NSString *) eventID;
 - (NSString *) name;
 - (NSString *) hostUserID;
 - (NSDate *) date;
+- (NSString *) venueName;
 - (NSString *) venueID;
 - (NSArray *) proposedVenues;
 - (NSArray *) invited;
@@ -45,6 +52,7 @@
 + (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
 // TODO(jacob) this should be an initializer
 + (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
++ (NSArray *) currentEventsWithIDs: (NSArray *)eventIDs;
 
 
 @end
