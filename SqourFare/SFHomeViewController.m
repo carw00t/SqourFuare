@@ -16,7 +16,10 @@ static NSString *goingEventName = @"Confirmed";
 static NSString *invitedEventName = @"Invited";
 
 @interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
-@property (strong, nonatomic) NSArray *userFriends;
+@property (strong, nonatomic) NSMutableArray *userFriends;
+@property (strong, nonatomic) NSArray *comingUpEvents;
+@property (strong, nonatomic) NSArray *confirmedEvents;
+@property (strong, nonatomic) NSArray *invitedEvents;
 @end
 
 @implementation SFHomeViewController

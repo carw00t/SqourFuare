@@ -19,6 +19,7 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *hostUserID;
 @property (strong, nonatomic) NSDate *date;
+@property (nonatomic) CLLocationCoordinate2D location;
 @property (strong, nonatomic) NSString *venueName;
 @property (strong, nonatomic) NSString *venueID;
 @property (strong, nonatomic) NSArray *proposedVenues;
@@ -64,6 +65,9 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
     self.votes = eventObj[@"votes"];
     self.timeVotes = eventObj[@"timeVotes"];
     self.parseObj = eventObj;
+    
+    PFGeoPoint *loc = eventObj[@"location"];
+    self.location = CLLocationCoordinate2DMake(loc.latitude, loc.longitude);
   }
   
   return self;
@@ -73,6 +77,7 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
                             name:(NSString*)name
                             host:(NSString *)hostID
                             date:(NSDate*)date
+                        location:(CLLocationCoordinate2D)location
                        venueName:(NSString *)venueName
                            venue:(NSString *)venueID
                   proposedVenues:(NSArray *)proposed
@@ -85,6 +90,7 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
     self.name = name;
     self.hostUserID = hostID;
     self.date = date;
+    self.location = location;
     self.venueName = venueName;
     self.venueID = venueID;
     self.proposedVenues = proposed;
@@ -98,6 +104,8 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
     [self.parseObj setObject:name forKey:@"name"];
     [self.parseObj setObject:hostID forKey:@"host"];
     [self.parseObj setObject:date forKey:@"date"];
+    [self.parseObj setObject:[PFGeoPoint geoPointWithLatitude:location.latitude longitude:location.longitude]
+                                                       forKey:@"location"];
     [self.parseObj setObject:venueName forKey:@"venueName"];
     [self.parseObj setObject:venueID forKey:@"venueID"];
     [self.parseObj setObject:proposed forKey:@"proposedVenues"];
@@ -112,12 +120,16 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   return self;
 }
 
-+ (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID
++ (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date location:(CLLocationCoordinate2D)location host:(NSString *)hostID
 {
   PFObject *eventObj = [PFObject objectWithClassName:@"Event"];
   [eventObj setObject:name forKey:@"name"];
   [eventObj setObject:hostID forKey:@"host"];
   [eventObj setObject:date forKey:@"date"];
+  
+  PFGeoPoint *loc = [PFGeoPoint geoPointWithLatitude:location.latitude longitude:location.longitude];
+  [eventObj setObject:loc forKey:@"location"];
+  
   [eventObj setObject:[NSArray array] forKey:@"proposedVenues"];
   [eventObj setObject:[NSArray array] forKey:@"invited"];
   [eventObj setObject:[NSArray array] forKey:@"confirmedMembers"];
@@ -130,6 +142,10 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   [dupCheck whereKey:@"name" equalTo:name];
   [dupCheck whereKey:@"host" equalTo:hostID];
   [dupCheck whereKey:@"date" equalTo:date];
+
+  // TODO(jacob) this doesn't work for some reason (doesn't find anything). what the fuck???
+  // [dupCheck whereKey:@"location" equalTo:loc];
+  
   NSArray *events = [dupCheck findObjects];
   
   if ([events count] == 0) {
@@ -163,12 +179,13 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   return [[SFEvent alloc] initWithPFObject:eventObj];
 }
 
-+ (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID
++ (instancetype) eventWithName:(NSString *)name date:(NSDate *)date location:(CLLocationCoordinate2D)location host:(NSString *)hostID
 {
   PFQuery *findEvent = [SFEvent cachedQueryWithClassName:@"Event"];
   [findEvent whereKey:@"name" equalTo:name];
   [findEvent whereKey:@"host" equalTo:hostID];
   [findEvent whereKey:@"date" equalTo:date];
+  [findEvent whereKey:@"location" equalTo:[PFGeoPoint geoPointWithLatitude:location.latitude longitude:location.longitude]];
   
   PFObject *eventObj = [findEvent getFirstObject];
   return [[SFEvent alloc] initWithPFObject:eventObj];
@@ -186,6 +203,13 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
     [events addObject:[[SFEvent alloc] initWithPFObject:pfEvent]];
   }
   return events;
+}
+
+- (void) addLocation:(CLLocationCoordinate2D)location
+{
+  self.location = location;
+  [self.parseObj addObject:[PFGeoPoint geoPointWithLatitude:location.latitude longitude:location.longitude] forKey:@"location"];
+  [self.parseObj saveInBackground];
 }
 
 - (void) addTimeVote:(NSDate *)time userID:(NSString *)userID

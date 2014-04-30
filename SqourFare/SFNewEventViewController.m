@@ -8,8 +8,10 @@
 
 #import "SFNewEventViewController.h"
 
-@interface SFNewEventViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface SFNewEventViewController () <CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) NSArray *users;
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (nonatomic) CLLocationCoordinate2D location;
 @end
 
 @implementation SFNewEventViewController
@@ -19,6 +21,13 @@
   if (self = [super initWithNibName:@"SFNewEventViewController" bundle:nil]) {
     self.loggedInUser = user;
     self.users = friends;
+    
+    self.location = CLLocationCoordinate2DMake(0.0, 0.0);
+    
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    self.locationManager.delegate = self;
+    [self.locationManager startUpdatingLocation];
   }
   return self;
 }
@@ -42,21 +51,30 @@
   // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+- (void)locationManager:(CLLocationManager *)manager
+     didUpdateLocations:(NSArray *)locations
+{
+  self.location = ((CLLocation *)locations[0]).coordinate;
+}
+
 -(void)inviteFriends:(id)sender
 {
   NSArray *indexPaths = [self.friendTableView indexPathsForSelectedRows];
-  if (indexPaths.count == 0) {
-    
-  }
   
-  SFEvent *newEvent = [SFEvent createEventWithName:self.eventNameField.text date:self.datePicker.date host:self.loggedInUser.userID];
+  SFEvent *newEvent = [SFEvent createEventWithName:self.eventNameField.text
+                                              date:self.datePicker.date
+                                          location:self.location
+                                              host:self.loggedInUser.userID];
+  
   NSMutableArray *invitedUsers = [[NSMutableArray alloc] initWithObjects:self.loggedInUser.userID, nil];
   [[self loggedInUser] inviteToEvent:newEvent.eventID];
+  
   for (NSIndexPath *indexPath in indexPaths) {
     SFUser *user = [self.users objectAtIndex:indexPath.row];
     [invitedUsers addObject: user.userID];
     [user inviteToEvent:newEvent.eventID];
   }
+  
   [newEvent inviteUsers:invitedUsers];
   
   NSLog(@"Users invited to the event: %@", newEvent.invited);

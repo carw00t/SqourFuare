@@ -13,9 +13,10 @@
 
 - (instancetype) initWithPFObject:(PFObject *)eventObj;
 - (instancetype) initWithEventID:(NSString *)eventID
-                            name:(NSString*)name
+                            name:(NSString *)name
                             host:(NSString *)hostID
-                            date:(NSDate*)date
+                            date:(NSDate *)date
+                        location:(CLLocationCoordinate2D)location
                        venueName:(NSString *)venueName
                            venue:(NSString *)venueID
                   proposedVenues:(NSArray *)proposed
@@ -24,6 +25,7 @@
                            votes:(NSArray *)votes
                        timeVotes:(NSArray *)timeVotes;
 
+- (void) addLocation:(CLLocationCoordinate2D)location;
 - (void) addTimeVote:(NSDate *)time userID:(NSString *)userID;
 - (void) addVote:(NSString *)voteID;
 - (void) addVotes:(NSArray *)voteIDs;
@@ -40,6 +42,7 @@
 - (NSString *) name;
 - (NSString *) hostUserID;
 - (NSDate *) date;
+- (CLLocationCoordinate2D) location;
 - (NSString *) venueName;
 - (NSString *) venueID;
 - (NSArray *) proposedVenues;
@@ -49,9 +52,9 @@
 - (NSArray *) timeVotes;
 
 + (instancetype) eventWithID:(NSString *)eventID;
-+ (instancetype) eventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
++ (instancetype) eventWithName:(NSString *)name date:(NSDate *)date location:(CLLocationCoordinate2D)location host:(NSString *)hostID;
 // TODO(jacob) this should be an initializer
-+ (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date host:(NSString *)hostID;
++ (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date location:(CLLocationCoordinate2D)location host:(NSString *)hostID;
 + (NSArray *) currentEventsWithIDs: (NSArray *)eventIDs;
 
 
