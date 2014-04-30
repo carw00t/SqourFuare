@@ -23,16 +23,27 @@ static NSString *invitedEventName = @"Invited";
 @end
 
 @implementation SFHomeViewController
+
 - (void) userLoggedIn:(SFUser *)user
 {
   self.loggedInUser = user;
-  self.userFriends = [self.loggedInUser getFriendsAsObjects];
+  NSMutableArray *friends = [[NSMutableArray alloc] init];
+  [friends setArray:[self.loggedInUser getFriendsAsObjects]];
+  self.userFriends = friends;
   
-  [self.navigationController popToRootViewControllerAnimated:YES];
-  [self.navigationController setNavigationBarHidden:NO animated:NO];
-  NSLog(@"User %@ logged in", user.username);
+  NSArray *controllers = [self.navigationController viewControllers];
+  UIView *loginView = ((UIViewController *)controllers[1]).view;
+  UIView *homeView = ((UIViewController *)controllers[0]).view;
   
   [self refreshData];
+  
+  [self.navigationController popViewControllerAnimated:NO];
+  [self.navigationController setNavigationBarHidden:NO animated:YES];
+  [UIView transitionFromView:loginView
+                      toView:homeView
+                    duration:0.5
+                     options:UIViewAnimationOptionTransitionCrossDissolve
+                  completion:^(BOOL finished) {}];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil

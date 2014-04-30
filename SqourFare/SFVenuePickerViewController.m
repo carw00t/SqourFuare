@@ -102,6 +102,18 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   [self.navigationController popViewControllerAnimated:YES];
 }
 
+// TODO(jacob) figure out the map curl-down
+//- (void)viewDidAppear:(BOOL)animated
+//{
+//  [super viewDidAppear:animated];
+//  
+//  [UIView transitionFromView:self.view
+//                      toView:self.mapView
+//                    duration:0.5
+//                     options:UIViewAnimationOptionTransitionCurlDown
+//                  completion:^(BOOL finished) {}];
+//}
+
 - (void)viewDidLoad
 {
   [super viewDidLoad];
