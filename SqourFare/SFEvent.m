@@ -19,7 +19,7 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 @property (strong, nonatomic) NSString *name;
 @property (strong, nonatomic) NSString *hostUserID;
 @property (strong, nonatomic) NSDate *date;
-@property (nonatomic) CLLocationCoordinate2D location;
+@property (assign, nonatomic) CLLocationCoordinate2D location;
 @property (strong, nonatomic) NSString *venueName;
 @property (strong, nonatomic) NSString *venueID;
 @property (strong, nonatomic) NSArray *proposedVenues;

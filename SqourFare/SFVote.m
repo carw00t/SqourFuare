@@ -14,7 +14,7 @@
 @property (strong, nonatomic) NSString *userID;
 @property (strong, nonatomic) NSString *eventID;
 @property (strong, nonatomic) NSString *venueID;
-@property (nonatomic) NSNumber *voteType;
+@property (strong, nonatomic) NSNumber *voteType;
 @property (strong, nonatomic) PFObject *parseObj;
 
 + (PFQuery *) cachedQueryWithClassName:(NSString *)name;

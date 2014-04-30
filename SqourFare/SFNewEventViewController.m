@@ -11,7 +11,7 @@
 @interface SFNewEventViewController () <CLLocationManagerDelegate, UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) NSArray *users;
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property (nonatomic) CLLocationCoordinate2D location;
+@property (assign, nonatomic) CLLocationCoordinate2D location;
 @end
 
 @implementation SFNewEventViewController

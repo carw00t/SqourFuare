@@ -7,6 +7,7 @@
 //
 
 #import "SFEvent.h"
+#import "SFMapLocation.h"
 #import "SFUser.h"
 #import "SFVote.h"
 #import "SFVenuePickerViewController.h"
@@ -75,13 +76,21 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   
   // this is right. trust me
   NSArray *venues = [[[[resultDict objectForKey:@"response"] objectForKey:@"groups"] objectAtIndex:0] objectForKey:@"items"];
-  
-  // TODO(jacob) may eventually want to store more info than just a name and id
   NSMutableArray *venueDicts = [NSMutableArray arrayWithCapacity:venues.count];
+  
   [venues enumerateObjectsUsingBlock:^(NSDictionary *dict, NSUInteger idx, BOOL *stop) {
+    
     NSMutableDictionary *idxDict = [NSMutableDictionary dictionary];
-    idxDict[@"name"] = [[dict objectForKey:@"venue"] objectForKey:@"name"];
-    idxDict[@"id"] = [[dict objectForKey:@"venue"] objectForKey:@"id"];
+    NSDictionary *venue = [dict objectForKey:@"venue"];
+    NSDictionary *category = [[venue objectForKey:@"categories"] objectAtIndex:0];
+    
+    idxDict[@"name"] = [venue objectForKey:@"name"];
+    idxDict[@"id"] = [venue objectForKey:@"id"];
+    idxDict[@"lat"] = [[venue objectForKey:@"location"] objectForKey:@"lat"];
+    idxDict[@"lng"] = [[venue objectForKey:@"location"] objectForKey:@"lng"];
+    idxDict[@"category"] = [category objectForKey:@"name"];
+    idxDict[@"icon"] = [NSString stringWithFormat:@"%@%@", [category objectForKey:@"id"], [[category objectForKey:@"icon"] objectForKey:@"suffix"]];
+    
     venueDicts[idx] = idxDict;
   }];
 
@@ -122,15 +131,25 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   self.navigationItem.rightBarButtonItem = voteButton;
   self.title = @"Pick some places";
   
+  self.mapView.delegate = self;
   self.mapView.showsUserLocation = YES;
+  
+  for (NSDictionary *venue in self.venues) {
+    
+    NSNumber *lat = [venue objectForKey:@"lat"];
+    NSNumber *lng = [venue objectForKey:@"lng"];
+    CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(lat.doubleValue, lng.doubleValue);
+    
+    SFMapLocation *point = [[SFMapLocation alloc] initWithVenue:[venue objectForKey:@"name"] category:[venue objectForKey:@"category"] location:loc icon:[venue objectForKey:@"icon"]];
+    [self.mapView addAnnotation:point];
+    
+  }
   
   MKCoordinateRegion mapRegion;
   mapRegion.center = self.event.location;
   mapRegion.span.latitudeDelta = 0.2;
   mapRegion.span.longitudeDelta = 0.2;
   [self.mapView setRegion:mapRegion animated:YES];
-  
-//  self.mapView.delegate = self;
   
   // Uncomment the following line to preserve selection between presentations.
   // self.clearsSelectionOnViewWillAppear = NO;
@@ -178,6 +197,40 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   cell.textLabel.text = [self.venues objectAtIndex:indexPath.row][@"name"];
   
   return cell;
+}
+
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+{
+  NSLog(@"view selected");
+}
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
+  static NSString *identifier = @"VenueLocation";
+  
+  if ([annotation isKindOfClass:[SFMapLocation class]]) {
+    
+    SFMapLocation *anno = (SFMapLocation *)annotation;
+    MKAnnotationView *annoView = [self.mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+    
+    if (annoView == nil) {
+      
+      annoView = [[MKAnnotationView alloc] initWithAnnotation:anno reuseIdentifier:identifier];
+      annoView.enabled = YES;
+      annoView.canShowCallout = YES;
+      annoView.image = [UIImage imageNamed:anno.icon];
+      NSLog(@"icon: %@, image: %@", anno.icon, annoView.image);
+    }
+    else {
+      annoView.annotation = anno;
+    }
+    
+    return annoView;
+  }
+  else {
+    return nil;
+  }
+  
 }
 
 /*
