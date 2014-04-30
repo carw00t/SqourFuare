@@ -219,7 +219,6 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
       annoView.enabled = YES;
       annoView.canShowCallout = YES;
       annoView.image = [UIImage imageNamed:anno.icon];
-      NSLog(@"icon: %@, image: %@", anno.icon, annoView.image);
     }
     else {
       annoView.annotation = anno;
