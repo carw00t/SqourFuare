@@ -55,7 +55,14 @@
       [self.usernameTextField.text isEqualToString:@""] ||
       [self.passwordTextField.text isEqualToString:@"Password"] ||
       [self.passwordTextField.text isEqualToString:@""]) {
-    NSLog(@"Oh, real original (put an alert to enter something valid here)");
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:@"Signup Failure"
+                          message:@"Didn't anyone ever teach you to create a decent username and password? Be more original next time!"
+                          delegate:self
+                          cancelButtonTitle:@"Ok..."
+                          otherButtonTitles:nil];
+    
+    [alert show];
   }
   else {
     SFUser *user = [SFUser signupUserWithUsername:self.usernameTextField.text
@@ -64,28 +71,34 @@
       [self.loginDelegate userLoggedIn:user];
     }
     else {
-      NSLog(@"Signup failure (probably a duplicate username). (popup)");
+      UIAlertView *alert = [[UIAlertView alloc]
+                            initWithTitle:@"Signup Failure"
+                            message:@"Probably a duplicate username. Be more original next time."
+                            delegate:self
+                            cancelButtonTitle:@"Dismiss"
+                            otherButtonTitles:nil];
+      
+      [alert show];
     }
   }
 }
 
 - (IBAction)loginButton:(id)sender {
   
-  if ([self.usernameTextField.text isEqualToString:@"Username"] ||
-      [self.usernameTextField.text isEqualToString:@""] ||
-      [self.passwordTextField.text isEqualToString:@"Password"] ||
-      [self.passwordTextField.text isEqualToString:@""]) {
-    NSLog(@"Oh, real original (put an alert to enter something valid here)");
+  SFUser *user = [SFUser userWithUsername:self.usernameTextField.text
+                                 password:self.passwordTextField.text];
+  if (user) {
+    [self.loginDelegate userLoggedIn:user];
   }
   else {
-    SFUser *user = [SFUser userWithUsername:self.usernameTextField.text
-                                   password:self.passwordTextField.text];
-    if (user) {
-      [self.loginDelegate userLoggedIn:user];
-    }
-    else {
-      NSLog(@"Invalid password or user not found. (popup)");
-    }
+    UIAlertView *alert = [[UIAlertView alloc]
+                          initWithTitle:@"Login Failure"
+                          message:@"Unable to log in. Check your typing or try again later."
+                          delegate:self
+                          cancelButtonTitle:@"Dismiss"
+                          otherButtonTitles:nil];
+    
+    [alert show];
   }
 }
 

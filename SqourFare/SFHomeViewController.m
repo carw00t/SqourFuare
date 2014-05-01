@@ -16,7 +16,7 @@ static NSString *goingEventName = @"Confirmed";
 static NSString *invitedEventName = @"Invited";
 
 @interface SFHomeViewController() <UITableViewDelegate, UITableViewDataSource>
-@property (strong, nonatomic) NSMutableArray *userFriends;
+@property (strong, nonatomic) NSArray *userFriends;
 @property (strong, nonatomic) NSArray *comingUpEvents;
 @property (strong, nonatomic) NSArray *confirmedEvents;
 @property (strong, nonatomic) NSArray *invitedEvents;
@@ -27,9 +27,7 @@ static NSString *invitedEventName = @"Invited";
 - (void) userLoggedIn:(SFUser *)user
 {
   self.loggedInUser = user;
-  NSMutableArray *friends = [[NSMutableArray alloc] init];
-  [friends setArray:[self.loggedInUser getFriendsAsObjects]];
-  self.userFriends = friends;
+  self.userFriends = [self.loggedInUser getFriendsAsObjects];
   
   NSArray *controllers = [self.navigationController viewControllers];
   UIView *loginView = ((UIViewController *)controllers[1]).view;

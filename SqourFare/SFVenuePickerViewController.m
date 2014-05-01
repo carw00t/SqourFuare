@@ -21,7 +21,11 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 @property (strong, nonatomic) SFEvent *event;
 @property (strong, nonatomic) SFUser *loggedInUser;
 @property (strong, nonatomic) NSArray *venues;
+@property (strong, nonatomic) NSNumber *venueRadius;
+@property (strong, nonatomic) NSMutableArray *annotations;
 @property (strong, nonatomic) NSArray *pastVotes;
+@property (strong, nonatomic) NSMutableArray *venueIDs;
+@property (assign, nonatomic) NSInteger nextTag;
 
 @end
 
@@ -33,7 +37,10 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   if (self) {
     self.event = event;
     self.loggedInUser = user;
-    self.venues = [self getVenues];
+    self.nextTag = 0;
+    self.venues = [self getVenues]; // also sets self.venueRadius
+    self.venueIDs = [NSMutableArray arrayWithCapacity:[self.venues count]];
+    self.annotations = [NSMutableArray arrayWithCapacity:[self.venues count]];
     self.pastVotes = pastVotes;
   }
   return self;
@@ -52,20 +59,8 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 
 - (NSArray *) getVenues
 {
-  // Gates
-//  CLLocationDegrees lat = 40.4437566;
-//  CLLocationDegrees lng = -79.9444789;
-  
-// not ready yet
-//  CLLocationCoordinate2D loc = self.mapView.userLocation.coordinate;
-  
-  
   NSString *endpoint = [NSString stringWithFormat:@"%@?ll=%.5f,%.5f&client_id=%@&client_secret=%@&section=food&v=20140227",
                         foursquareEndpoint,
-                        // loc.latitude,
-                        // loc.longitude,
-//                        lat,
-//                        lng,
                         self.event.location.latitude,
                         self.event.location.longitude,
                         clientId,
@@ -75,6 +70,7 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
   
   // this is right. trust me
+  self.venueRadius = [[resultDict objectForKey:@"response"] objectForKey:@"suggestedRadius"];
   NSArray *venues = [[[[resultDict objectForKey:@"response"] objectForKey:@"groups"] objectAtIndex:0] objectForKey:@"items"];
   NSMutableArray *venueDicts = [NSMutableArray arrayWithCapacity:venues.count];
   
@@ -131,6 +127,7 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   self.navigationItem.rightBarButtonItem = voteButton;
   self.title = @"Pick some places";
   
+  self.venueTable.delegate = self;
   self.mapView.delegate = self;
   self.mapView.showsUserLocation = YES;
   
@@ -140,16 +137,18 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
     NSNumber *lng = [venue objectForKey:@"lng"];
     CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(lat.doubleValue, lng.doubleValue);
     
-    SFMapLocation *point = [[SFMapLocation alloc] initWithVenue:[venue objectForKey:@"name"] category:[venue objectForKey:@"category"] location:loc icon:[venue objectForKey:@"icon"]];
+    SFMapLocation *point = [[SFMapLocation alloc] initWithVenue:[venue objectForKey:@"name"]
+                                                        venueID:[venue objectForKey:@"id"]
+                                                       category:[venue objectForKey:@"category"]
+                                                       location:loc
+                                                           icon:[venue objectForKey:@"icon"]];
+    [self.annotations addObject:point];
     [self.mapView addAnnotation:point];
     
   }
   
-  MKCoordinateRegion mapRegion;
-  mapRegion.center = self.event.location;
-  mapRegion.span.latitudeDelta = 0.2;
-  mapRegion.span.longitudeDelta = 0.2;
-  [self.mapView setRegion:mapRegion animated:YES];
+  MKCoordinateRegion mapRegion = MKCoordinateRegionMakeWithDistance(self.event.location, self.venueRadius.intValue, self.venueRadius.intValue);
+  [self.mapView setRegion:[self.mapView regionThatFits:mapRegion] animated:YES];
   
   // Uncomment the following line to preserve selection between presentations.
   // self.clearsSelectionOnViewWillAppear = NO;
@@ -162,6 +161,59 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 {
   [super didReceiveMemoryWarning];
   // Dispose of any resources that can be recreated.
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  [self.mapView selectAnnotation:[self.annotations objectAtIndex:indexPath.row] animated:YES];
+}
+
+- (void) gotoVenuePage:(UIButton *)sender
+{
+  UIViewController *controller = [[UIViewController alloc] init];
+  UIWebView *venuePage = [[UIWebView alloc] init];
+  [venuePage loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://foursquare.com/v/%@", [self.venueIDs objectAtIndex:sender.tag]]]]];
+  controller.view = venuePage;
+  
+  [self.navigationController pushViewController:controller animated:YES];
+}
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
+{
+  static NSString *identifier = @"VenueLocation";
+  
+  if ([annotation isKindOfClass:[SFMapLocation class]]) {
+    
+    SFMapLocation *anno = (SFMapLocation *)annotation;
+    MKAnnotationView *annoView = [self.mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+    
+    if (annoView == nil) {
+      
+      annoView = [[MKAnnotationView alloc] initWithAnnotation:anno reuseIdentifier:identifier];
+      annoView.enabled = YES;
+      annoView.canShowCallout = YES;
+      annoView.image = [UIImage imageNamed:anno.icon];
+      
+      UIButton *venueButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+      venueButton.tag = self.nextTag;
+      [self.venueIDs setObject:[anno venueID] atIndexedSubscript:self.nextTag];
+      self.nextTag += 1;
+      
+      [venueButton addTarget:self
+                      action:@selector(gotoVenuePage:)
+            forControlEvents:UIControlEventTouchUpInside];
+      annoView.rightCalloutAccessoryView = venueButton;
+    }
+    else {
+      annoView.annotation = anno;
+    }
+    
+    return annoView;
+  }
+  else {
+    return nil;
+  }
+  
 }
 
 #pragma mark - Table view data source
@@ -197,39 +249,6 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   cell.textLabel.text = [self.venues objectAtIndex:indexPath.row][@"name"];
   
   return cell;
-}
-
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
-{
-  NSLog(@"view selected");
-}
-
-- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
-{
-  static NSString *identifier = @"VenueLocation";
-  
-  if ([annotation isKindOfClass:[SFMapLocation class]]) {
-    
-    SFMapLocation *anno = (SFMapLocation *)annotation;
-    MKAnnotationView *annoView = [self.mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
-    
-    if (annoView == nil) {
-      
-      annoView = [[MKAnnotationView alloc] initWithAnnotation:anno reuseIdentifier:identifier];
-      annoView.enabled = YES;
-      annoView.canShowCallout = YES;
-      annoView.image = [UIImage imageNamed:anno.icon];
-    }
-    else {
-      annoView.annotation = anno;
-    }
-    
-    return annoView;
-  }
-  else {
-    return nil;
-  }
-  
 }
 
 /*
