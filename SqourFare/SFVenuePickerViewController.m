@@ -11,10 +11,12 @@
 #import "SFUser.h"
 #import "SFVote.h"
 #import "SFVenuePickerViewController.h"
+#import "SFVenuePickerTableViewCell.h"
 
 static NSString * const clientId = @"42SYZZI4H5NZHFFI0UNEGW51INGXKDUUG2OQCDLMRV3IJKHQ";
 static NSString * const clientSecret = @"RBHL3IV51VYYGDNJZ2HSS2IFGRPB4AH3QVFXGUU2OCDEAZTV";
 static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/venues/explore";
+static NSString * const CellIdentifier = @"VenuePickerCell";
 
 @interface SFVenuePickerViewController () <MKMapViewDelegate>
 
@@ -135,14 +137,12 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   self.mapView.showsUserLocation = YES;
   
   for (NSDictionary *venue in self.venues) {
-    
     NSNumber *lat = [venue objectForKey:@"lat"];
     NSNumber *lng = [venue objectForKey:@"lng"];
     CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(lat.doubleValue, lng.doubleValue);
     
     SFMapLocation *point = [[SFMapLocation alloc] initWithVenue:[venue objectForKey:@"name"] category:[venue objectForKey:@"category"] location:loc icon:[venue objectForKey:@"icon"]];
     [self.mapView addAnnotation:point];
-    
   }
   
   MKCoordinateRegion mapRegion;
@@ -150,6 +150,8 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
   mapRegion.span.latitudeDelta = 0.2;
   mapRegion.span.longitudeDelta = 0.2;
   [self.mapView setRegion:mapRegion animated:YES];
+
+  [self.tableView registerNib:[UINib nibWithNibName:@"SFVenuePickerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:CellIdentifier];
   
   // Uncomment the following line to preserve selection between presentations.
   // self.clearsSelectionOnViewWillAppear = NO;
@@ -178,12 +180,13 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  static NSString *CellIdentifier = @"Cell";
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
+  SFVenuePickerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
   
   if (cell == nil) {
-    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    cell = [[SFVenuePickerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
   }
+  cell.selectionStyle = UITableViewCellSelectionStyleNone;
   
   if (self.pastVotes.count > 0) {
     // need to check if user voted before to higlight venues
@@ -194,7 +197,19 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
       }
     }
   }
-  cell.textLabel.text = [self.venues objectAtIndex:indexPath.row][@"name"];
+  cell.venueName.text = [self.venues objectAtIndex:indexPath.row][@"name"];
+
+  // display foursquare icon images
+  UIImage *eventIcon = [UIImage imageNamed:[self.venues objectAtIndex:indexPath.row][@"icon"]];
+  if (eventIcon) {
+    CGSize size = CGSizeMake(31.0, 31.0);
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:eventIcon];
+    CGPoint position = CGPointMake(10, (cell.frame.size.height - imageView.frame.size.height)/2);
+    imageView.layer.cornerRadius = 31.0/2;
+    imageView.clipsToBounds = YES;
+    [imageView setFrame:CGRectMake(position.x, position.y, size.width, size.height)];
+    [cell addSubview:imageView];
+  }
   
   return cell;
 }
@@ -231,6 +246,16 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
     return nil;
   }
   
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath   *)indexPath
+{
+  [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
+}
+
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+  [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryNone;
 }
 
 /*

@@ -714,6 +714,8 @@
 		8EBA6F6018BB1ACD001A5639 /* SFUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F5F18BB1ACD001A5639 /* SFUser.m */; };
 		8EBA6F6418BB2C4A001A5639 /* SFMealInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EBA6F6218BB2C4A001A5639 /* SFMealInviteViewController.m */; };
 		8EBA6F6518BB2C4B001A5639 /* SFMealInviteViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EBA6F6318BB2C4A001A5639 /* SFMealInviteViewController.xib */; };
+		8EE079591911E2A500EB84CB /* SFVenuePickerTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8EE079571911E2A500EB84CB /* SFVenuePickerTableViewCell.m */; };
+		8EE0795A1911E2A500EB84CB /* SFVenuePickerTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8EE079581911E2A500EB84CB /* SFVenuePickerTableViewCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1450,6 +1452,9 @@
 		8EBA6F6118BB2C4A001A5639 /* SFMealInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFMealInviteViewController.h; sourceTree = "<group>"; };
 		8EBA6F6218BB2C4A001A5639 /* SFMealInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFMealInviteViewController.m; sourceTree = "<group>"; };
 		8EBA6F6318BB2C4A001A5639 /* SFMealInviteViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFMealInviteViewController.xib; sourceTree = "<group>"; };
+		8EE079561911E2A500EB84CB /* SFVenuePickerTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFVenuePickerTableViewCell.h; sourceTree = "<group>"; };
+		8EE079571911E2A500EB84CB /* SFVenuePickerTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SFVenuePickerTableViewCell.m; sourceTree = "<group>"; };
+		8EE079581911E2A500EB84CB /* SFVenuePickerTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SFVenuePickerTableViewCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2231,6 +2236,9 @@
 				8EBA6F5F18BB1ACD001A5639 /* SFUser.m */,
 				1611539F18C029A600673FFC /* SFVenuePickerViewController.h */,
 				161153A018C029A600673FFC /* SFVenuePickerViewController.m */,
+				8EE079561911E2A500EB84CB /* SFVenuePickerTableViewCell.h */,
+				8EE079571911E2A500EB84CB /* SFVenuePickerTableViewCell.m */,
+				8EE079581911E2A500EB84CB /* SFVenuePickerTableViewCell.xib */,
 				16F9C65C1911747600F7A565 /* SFMapLocation.h */,
 				16F9C65D1911747600F7A565 /* SFMapLocation.m */,
 				161153A118C029A600673FFC /* SFVenuePickerViewController.xib */,
@@ -2595,6 +2603,7 @@
 				16F9C92E19119C9F00F7A565 /* 4bf58dd8d48988d11a941735.png in Resources */,
 				8EBA6F4F18BAE3AB001A5639 /* SFHomeViewTableCell.xib in Resources */,
 				16F9C98F19119C9F00F7A565 /* 4bf58dd8d48988d16b941735.png in Resources */,
+				8EE0795A1911E2A500EB84CB /* SFVenuePickerTableViewCell.xib in Resources */,
 				16F9CB0C19119C9F00F7A565 /* 52e81612bcbc57f1066b7a0a.png in Resources */,
 				16F9C94B19119C9F00F7A565 /* 4bf58dd8d48988d12a941735.png in Resources */,
 				16F9C91519119C9F00F7A565 /* 4bf58dd8d48988d10d941735.png in Resources */,
@@ -3063,6 +3072,7 @@
 				8EBA6F5218BAE999001A5639 /* SFHomeViewTableCell.m in Sources */,
 				8E2E894318B559490078DB5B /* main.m in Sources */,
 				166D57A318C6F515001D6560 /* SFNewEventViewController.m in Sources */,
+				8EE079591911E2A500EB84CB /* SFVenuePickerTableViewCell.m in Sources */,
 				8E2E89C418B59D210078DB5B /* SFHomeViewController.m in Sources */,
 				8E2E89C818B5ABE40078DB5B /* SFEvent.m in Sources */,
 				8EBA6F6418BB2C4A001A5639 /* SFMealInviteViewController.m in Sources */,

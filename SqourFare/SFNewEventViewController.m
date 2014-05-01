@@ -59,6 +59,16 @@
 
 -(void)inviteFriends:(id)sender
 {
+  if (self.location.latitude == 0.0 || self.location.longitude == 0.0) {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Your location is not set"
+                                                    message:@"Please make sure your phone is set to get location data."
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil];
+    [alert show];
+    return;
+  }
+  
   NSArray *indexPaths = [self.friendTableView indexPathsForSelectedRows];
   
   SFEvent *newEvent = [SFEvent createEventWithName:self.eventNameField.text
