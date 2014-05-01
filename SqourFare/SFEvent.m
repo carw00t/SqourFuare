@@ -122,53 +122,41 @@ static NSString * const foursquareEndpoint = @"https://api.foursquare.com/v2/ven
 
 + (instancetype) createEventWithName:(NSString *)name date:(NSDate *)date location:(CLLocationCoordinate2D)location host:(NSString *)hostID
 {
-  PFObject *eventObj = [PFObject objectWithClassName:@"Event"];
-  [eventObj setObject:name forKey:@"name"];
-  [eventObj setObject:hostID forKey:@"host"];
-  [eventObj setObject:date forKey:@"date"];
-  
-  PFGeoPoint *loc = [PFGeoPoint geoPointWithLatitude:location.latitude longitude:location.longitude];
-  [eventObj setObject:loc forKey:@"location"];
-  
-  [eventObj setObject:[NSArray array] forKey:@"proposedVenues"];
-  [eventObj setObject:[NSArray array] forKey:@"invited"];
-  [eventObj setObject:[NSArray array] forKey:@"confirmedMembers"];
-  [eventObj setObject:[NSArray array] forKey:@"votes"];
-  [eventObj setObject:[NSArray array] forKey:@"timeVotes"];
-  
-  [eventObj save];
   
   PFQuery *dupCheck = [SFEvent cachedQueryWithClassName:@"Event"];
   [dupCheck whereKey:@"name" equalTo:name];
   [dupCheck whereKey:@"host" equalTo:hostID];
   [dupCheck whereKey:@"date" equalTo:date];
-
+  
   // TODO(jacob) this doesn't work for some reason (doesn't find anything). what the fuck???
   // [dupCheck whereKey:@"location" equalTo:loc];
   
   NSArray *events = [dupCheck findObjects];
   
   if ([events count] == 0) {
-    return nil;
-  }
-  else if ([events count] == 1) {
-    return [[SFEvent alloc] initWithPFObject:events[0]];
-  }
-  else {  //duplicates
-    PFObject *earliest;
-    NSDate *earliestDate;
     
-    for (PFObject *event in events) {
-      if (earliest == nil || [earliestDate compare:event.createdAt] == NSOrderedAscending) {
-        earliest = event;
-        earliestDate = event.createdAt;
-      }
+    PFObject *eventObj = [PFObject objectWithClassName:@"Event"];
+    [eventObj setObject:name forKey:@"name"];
+    [eventObj setObject:hostID forKey:@"host"];
+    [eventObj setObject:date forKey:@"date"];
+    
+    PFGeoPoint *loc = [PFGeoPoint geoPointWithLatitude:location.latitude longitude:location.longitude];
+    [eventObj setObject:loc forKey:@"location"];
+    
+    [eventObj setObject:[NSArray array] forKey:@"proposedVenues"];
+    [eventObj setObject:[NSArray array] forKey:@"invited"];
+    [eventObj setObject:[NSArray array] forKey:@"confirmedMembers"];
+    [eventObj setObject:[NSArray array] forKey:@"votes"];
+    [eventObj setObject:[NSArray array] forKey:@"timeVotes"];
+    
+    if ([eventObj save]) {
+      return [[SFEvent alloc] initWithPFObject:eventObj];
     }
-    
-    NSMutableArray *muteEvents = [NSMutableArray arrayWithArray:events];
-    [muteEvents removeObjectIdenticalTo:earliest];
-    [PFObject deleteAllInBackground:muteEvents];
-    
+    else {
+      return nil;
+    }
+  }
+  else {
     return nil;
   }
 }
