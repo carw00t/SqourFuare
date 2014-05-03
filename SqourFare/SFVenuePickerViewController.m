@@ -147,13 +147,33 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
     [self.mapView addAnnotation:point];
   }
   
-  MKCoordinateRegion mapRegion;
-  mapRegion.center = self.event.location;
-  mapRegion.span.latitudeDelta = 0.2;
-  mapRegion.span.longitudeDelta = 0.2;
-  [self.mapView setRegion:mapRegion animated:YES];
+  MKCoordinateRegion mapRegion = MKCoordinateRegionMakeWithDistance(self.event.location, self.venueRadius.intValue, self.venueRadius.intValue);
+  [self.mapView setRegion:[self.mapView regionThatFits:mapRegion] animated:YES];
 
   [self.tableView registerNib:[UINib nibWithNibName:@"SFVenuePickerTableViewCell" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:CellIdentifier];
+  
+
+  /*
+   This is really hacky. essentially, I need the table cells to be loaded 
+   before I select them or they wont have the checkmark. however just 
+   calling reload data does not load all the cells. selectRowAtIndexPath
+   does.
+   */
+  [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionBottom];
+  [self.tableView reloadData];
+
+  for (NSInteger i = 0; i < [self.tableView numberOfRowsInSection:0]; ++i) {
+    if (self.pastVotes.count > 0) {
+      // need to check if user voted before to higlight venues
+      for (SFVote *vote in self.pastVotes) {
+        NSString *venueID = [self.venues objectAtIndex:i][@"id"];
+        if ([vote.venueID isEqualToString:venueID]) {
+          [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+          [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]].accessoryType = UITableViewCellAccessoryCheckmark;
+        }
+      }
+    }
+  }
   
   // Uncomment the following line to preserve selection between presentations.
   // self.clearsSelectionOnViewWillAppear = NO;
@@ -168,43 +188,12 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
   // Dispose of any resources that can be recreated.
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-  [self.mapView selectAnnotation:[self.annotations objectAtIndex:indexPath.row] animated:YES];
-}
-
 - (void) gotoVenuePage:(UIButton *)sender
 {
-
-  SFVenuePickerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-  
-  if (cell == nil) {
-    cell = [[SFVenuePickerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-  }
-  cell.selectionStyle = UITableViewCellSelectionStyleNone;
-  
-  if (self.pastVotes.count > 0) {
-    // need to check if user voted before to higlight venues
-    for (SFVote *vote in self.pastVotes) {
-      NSString *venueID = [self.venues objectAtIndex:indexPath.row][@"id"];
-      if ([vote.venueID isEqualToString:venueID]) {
-        [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-      }
-    }
-  }
-  cell.venueName.text = [self.venues objectAtIndex:indexPath.row][@"name"];
-
-  // display foursquare icon images
-  UIImage *eventIcon = [UIImage imageNamed:[self.venues objectAtIndex:indexPath.row][@"icon"]];
-  if (eventIcon) {
-    CGSize size = CGSizeMake(31.0, 31.0);
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:eventIcon];
-    CGPoint position = CGPointMake(10, (cell.frame.size.height - imageView.frame.size.height)/2);
-    imageView.layer.cornerRadius = 31.0/2;
-    imageView.clipsToBounds = YES;
-    [imageView setFrame:CGRectMake(position.x, position.y, size.width, size.height)];
-    [cell addSubview:imageView];
-  }
+  UIViewController *controller = [[UIViewController alloc] init];
+  UIWebView *venuePage = [[UIWebView alloc] init];
+  [venuePage loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://foursquare.com/v/%@", [self.venueIDs objectAtIndex:sender.tag]]]]];
+  controller.view = venuePage;
   
   [self.navigationController pushViewController:controller animated:YES];
 }
@@ -244,11 +233,65 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
   else {
     return nil;
   }
+}
+
+#pragma mark - Table view data source
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+  return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+  return [self.venues count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+  SFVenuePickerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
   
+  if (cell == nil) {
+    cell = [[SFVenuePickerTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+  }
+  cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+  if (self.pastVotes.count > 0) {
+    // need to reset cell accessory type since cells are recyled
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    for (NSIndexPath *selectedIndexPath in [self.tableView indexPathsForSelectedRows]) {
+      if (selectedIndexPath.row == indexPath.row) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+      }
+    }
+  }
+
+  cell.venueName.text = [self.venues objectAtIndex:indexPath.row][@"name"];
+
+  // display foursquare icon images
+  UIImage *eventIcon = [UIImage imageNamed:[self.venues objectAtIndex:indexPath.row][@"icon"]];
+  if (eventIcon) {
+    CGSize size = CGSizeMake(31.0, 31.0);
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:eventIcon];
+    CGPoint position = CGPointMake(10, (cell.frame.size.height - imageView.frame.size.height)/2);
+    imageView.layer.cornerRadius = 31.0/2;
+    imageView.clipsToBounds = YES;
+    [imageView setFrame:CGRectMake(position.x, position.y, size.width, size.height)];
+    [cell addSubview:imageView];
+  }
+  
+  return cell;
+}
+
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
+{
+  NSLog(@"view selected");
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath   *)indexPath
 {
+  [self.mapView selectAnnotation:[self.annotations objectAtIndex:indexPath.row] animated:YES];
   [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
 }
 
