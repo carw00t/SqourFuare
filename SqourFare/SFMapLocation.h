@@ -12,10 +12,12 @@
 @interface SFMapLocation : NSObject <MKAnnotation>
 
 - (instancetype) initWithVenue:(NSString *)venue
+                       venueID:(NSString *)vid
                       category:(NSString *)category
                       location:(CLLocationCoordinate2D)coordinate
                           icon:(NSString *)icon;
 
 - (NSString *)icon;
+- (NSString *)venueID;
 
 @end

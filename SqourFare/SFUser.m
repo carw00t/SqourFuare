@@ -81,41 +81,27 @@
 + (instancetype) signupUserWithUsername:(NSString *)username
                                password:(NSString *)password
 {
-  PFObject *signupObj = [PFObject objectWithClassName:@"User"];
-  [signupObj setObject:username forKey:@"username"];
-  [signupObj setObject:password forKey:@"password"];
-  [signupObj setObject:[NSArray array] forKey:@"friends"];
-  [signupObj setObject:[NSArray array] forKey:@"invites"];
-  [signupObj setObject:[NSArray array] forKey:@"confirmedEvents"];
-  
-  [signupObj save];
-  
   PFQuery *dupCheck = [SFUser cachedQueryWithClassName:@"User"];
   [dupCheck whereKey:@"username" equalTo:username];
   [dupCheck whereKey:@"password" equalTo:password];
   NSArray *users = [dupCheck findObjects];
-  
+
   if ([users count] == 0) {
-    return nil;
-  }
-  else if ([users count] == 1) {
-    return [[SFUser alloc] initWithPFObject:users[0]];
-  }
-  else {  //duplicates
-    PFObject *earliest;
-    NSDate *earliestDate;
+    PFObject *signupObj = [PFObject objectWithClassName:@"User"];
+    [signupObj setObject:username forKey:@"username"];
+    [signupObj setObject:password forKey:@"password"];
+    [signupObj setObject:[NSArray array] forKey:@"friends"];
+    [signupObj setObject:[NSArray array] forKey:@"invites"];
+    [signupObj setObject:[NSArray array] forKey:@"confirmedEvents"];
     
-    for (PFObject *user in users) {
-      if (earliest == nil || [earliestDate compare:user.createdAt] == NSOrderedAscending) {
-        earliest = user;
-        earliestDate = user.createdAt;
-      }
+    if ([signupObj save]) {
+      return [[SFUser alloc] initWithPFObject:signupObj];
     }
-    
-    NSMutableArray *muteUsers = [NSMutableArray arrayWithArray:users];
-    [muteUsers removeObjectIdenticalTo:earliest];
-    [PFObject deleteAllInBackground:muteUsers];
-    
+    else {
+      return nil;
+    }
+  }
+  else {
     return nil;
   }
 }

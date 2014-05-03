@@ -14,18 +14,21 @@
 @property (strong, nonatomic) NSString *category;
 @property (assign, nonatomic) CLLocationCoordinate2D location;
 @property (strong, nonatomic) NSString *iconPath;
+@property (strong, nonatomic) NSString *venueID;
 
 @end
 
 @implementation SFMapLocation
 
 - (instancetype) initWithVenue:(NSString *)venue
+                       venueID:(NSString *)vid
                       category:(NSString *)category
                       location:(CLLocationCoordinate2D)location
                           icon:(NSString *)iconPath
 {
   if (self = [super init]) {
     self.venue = venue;
+    self.venueID = vid;
     self.category = category;
     self.location = location;
     self.iconPath = iconPath;

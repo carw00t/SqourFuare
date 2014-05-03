@@ -27,9 +27,7 @@ static NSString *invitedEventName = @"Invited";
 - (void) userLoggedIn:(SFUser *)user
 {
   self.loggedInUser = user;
-  NSMutableArray *friends = [[NSMutableArray alloc] init];
-  [friends setArray:[self.loggedInUser getFriendsAsObjects]];
-  self.userFriends = friends;
+  self.userFriends = [self.loggedInUser getFriendsAsObjects];
   
   NSArray *controllers = [self.navigationController viewControllers];
   UIView *loginView = ((UIViewController *)controllers[1]).view;

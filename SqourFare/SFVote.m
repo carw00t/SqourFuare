@@ -84,13 +84,6 @@
 + (instancetype) newVoteWithUserID:(NSString *)userID eventID:(NSString *)eventID
                            venueID:(NSString *)venueID voteType:(NSNumber *)voteType
 {
-  PFObject *voteObj = [PFObject objectWithClassName:@"Vote"];
-  [voteObj setObject:userID forKey:@"userID"];
-  [voteObj setObject:eventID forKey:@"eventID"];
-  [voteObj setObject:venueID forKey:@"venueID"];
-  [voteObj setObject:voteType forKey:@"voteType"];
-  
-  [voteObj save];
   
   PFQuery *dupCheck = [SFVote cachedQueryWithClassName:@"Vote"];
   [dupCheck whereKey:@"userID" equalTo:userID];
@@ -99,26 +92,22 @@
   NSArray *votes = [dupCheck findObjects];
   
   if ([votes count] == 0) {
-    return nil;
-  }
-  else if ([votes count] == 1) {
-    return [[SFVote alloc] initWithPFObject:votes[0]];
-  }
-  else {  //duplicates
-    PFObject *earliest;
-    NSDate *earliestDate;
     
-    for (PFObject *vote in votes) {
-      if (earliest == nil || [earliestDate compare:vote.createdAt] == NSOrderedAscending) {
-        earliest = vote;
-        earliestDate = vote.createdAt;
-      }
+    PFObject *voteObj = [PFObject objectWithClassName:@"Vote"];
+    [voteObj setObject:userID forKey:@"userID"];
+    [voteObj setObject:eventID forKey:@"eventID"];
+    [voteObj setObject:venueID forKey:@"venueID"];
+    [voteObj setObject:voteType forKey:@"voteType"];
+    
+    if ([voteObj save]) {
+      return [[SFVote alloc] initWithPFObject:voteObj];
+    }
+    else {
+      return nil;
     }
     
-    NSMutableArray *muteVotes = [NSMutableArray arrayWithArray:votes];
-    [muteVotes removeObjectIdenticalTo:earliest];
-    [PFObject deleteAllInBackground:muteVotes];
-    
+  }
+  else {
     return nil;
   }
 }

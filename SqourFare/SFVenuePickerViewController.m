@@ -23,7 +23,11 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
 @property (strong, nonatomic) SFEvent *event;
 @property (strong, nonatomic) SFUser *loggedInUser;
 @property (strong, nonatomic) NSArray *venues;
+@property (strong, nonatomic) NSNumber *venueRadius;
+@property (strong, nonatomic) NSMutableArray *annotations;
 @property (strong, nonatomic) NSArray *pastVotes;
+@property (strong, nonatomic) NSMutableArray *venueIDs;
+@property (assign, nonatomic) NSInteger nextTag;
 
 @end
 
@@ -35,7 +39,10 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
   if (self) {
     self.event = event;
     self.loggedInUser = user;
-    self.venues = [self getVenues];
+    self.nextTag = 0;
+    self.venues = [self getVenues]; // also sets self.venueRadius
+    self.venueIDs = [NSMutableArray arrayWithCapacity:[self.venues count]];
+    self.annotations = [NSMutableArray arrayWithCapacity:[self.venues count]];
     self.pastVotes = pastVotes;
   }
   return self;
@@ -54,20 +61,8 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
 
 - (NSArray *) getVenues
 {
-  // Gates
-//  CLLocationDegrees lat = 40.4437566;
-//  CLLocationDegrees lng = -79.9444789;
-  
-// not ready yet
-//  CLLocationCoordinate2D loc = self.mapView.userLocation.coordinate;
-  
-  
   NSString *endpoint = [NSString stringWithFormat:@"%@?ll=%.5f,%.5f&client_id=%@&client_secret=%@&section=food&v=20140227",
                         foursquareEndpoint,
-                        // loc.latitude,
-                        // loc.longitude,
-//                        lat,
-//                        lng,
                         self.event.location.latitude,
                         self.event.location.longitude,
                         clientId,
@@ -77,6 +72,7 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
   NSDictionary *resultDict = [NSJSONSerialization JSONObjectWithData:result options:0 error:nil];
   
   // this is right. trust me
+  self.venueRadius = [[resultDict objectForKey:@"response"] objectForKey:@"suggestedRadius"];
   NSArray *venues = [[[[resultDict objectForKey:@"response"] objectForKey:@"groups"] objectAtIndex:0] objectForKey:@"items"];
   NSMutableArray *venueDicts = [NSMutableArray arrayWithCapacity:venues.count];
   
@@ -133,6 +129,7 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
   self.navigationItem.rightBarButtonItem = voteButton;
   self.title = @"Pick some places";
   
+  self.venueTable.delegate = self;
   self.mapView.delegate = self;
   self.mapView.showsUserLocation = YES;
   
@@ -141,7 +138,12 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
     NSNumber *lng = [venue objectForKey:@"lng"];
     CLLocationCoordinate2D loc = CLLocationCoordinate2DMake(lat.doubleValue, lng.doubleValue);
     
-    SFMapLocation *point = [[SFMapLocation alloc] initWithVenue:[venue objectForKey:@"name"] category:[venue objectForKey:@"category"] location:loc icon:[venue objectForKey:@"icon"]];
+    SFMapLocation *point = [[SFMapLocation alloc] initWithVenue:[venue objectForKey:@"name"]
+                                                        venueID:[venue objectForKey:@"id"]
+                                                       category:[venue objectForKey:@"category"]
+                                                       location:loc
+                                                           icon:[venue objectForKey:@"icon"]];
+    [self.annotations addObject:point];
     [self.mapView addAnnotation:point];
   }
   
@@ -166,19 +168,12 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
   // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-  return 1;
+  [self.mapView selectAnnotation:[self.annotations objectAtIndex:indexPath.row] animated:YES];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-  return [self.venues count];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (void) gotoVenuePage:(UIButton *)sender
 {
 
   SFVenuePickerTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -211,12 +206,7 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
     [cell addSubview:imageView];
   }
   
-  return cell;
-}
-
-- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view
-{
-  NSLog(@"view selected");
+  [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation
@@ -234,7 +224,16 @@ static NSString * const CellIdentifier = @"VenuePickerCell";
       annoView.enabled = YES;
       annoView.canShowCallout = YES;
       annoView.image = [UIImage imageNamed:anno.icon];
-      NSLog(@"icon: %@, image: %@", anno.icon, annoView.image);
+      
+      UIButton *venueButton = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+      venueButton.tag = self.nextTag;
+      [self.venueIDs setObject:[anno venueID] atIndexedSubscript:self.nextTag];
+      self.nextTag += 1;
+      
+      [venueButton addTarget:self
+                      action:@selector(gotoVenuePage:)
+            forControlEvents:UIControlEventTouchUpInside];
+      annoView.rightCalloutAccessoryView = venueButton;
     }
     else {
       annoView.annotation = anno;
